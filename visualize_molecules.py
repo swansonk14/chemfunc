@@ -1,4 +1,4 @@
-"""Convert molecule SMILES to grids of images."""
+"""Converts molecule SMILES to grids of images."""
 import math
 from pathlib import Path
 
@@ -22,7 +22,7 @@ def visualize_molecules(data_path: Path,
                         smiles_column: str = 'smiles',
                         num_rows: int = 4,
                         mols_per_row: int = 8) -> None:
-    """Convert molecule SMILES to grids of images.
+    """Converts molecule SMILES to grids of images.
 
     :param data_path: Path to CSV file containing SMILES.
     :param save_dir: Path to a directory where visualized molecules will be saved as images.
