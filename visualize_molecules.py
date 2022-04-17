@@ -57,12 +57,4 @@ def visualize_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
-    args = Args().parse_args()
-
-    visualize_molecules(
-        data_path=args.data_path,
-        save_dir=args.save_dir,
-        smiles_column=args.smiles_column,
-        num_rows=args.num_rows,
-        mols_per_row=args.mols_per_row
-    )
+    visualize_molecules(**Args().parse_args().as_dict())

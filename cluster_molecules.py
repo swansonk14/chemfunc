@@ -45,11 +45,4 @@ def cluster_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
-    args = Args().parse_args()
-
-    cluster_molecules(
-        data_path=args.data_path,
-        save_path=args.save_path,
-        smiles_column=args.smiles_column,
-        num_clusters=args.num_clusters
-    )
+    cluster_molecules(**Args().parse_args().as_dict())

@@ -65,10 +65,4 @@ def sdf_to_smiles(data_path: Path,
 
 
 if __name__ == '__main__':
-    args = Args().parse_args()
-
-    sdf_to_smiles(
-        data_path=args.data_path,
-        save_path=args.save_path,
-        properties=args.properties
-    )
+    sdf_to_smiles(**Args().parse_args().as_dict())

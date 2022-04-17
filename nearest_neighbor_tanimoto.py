@@ -116,13 +116,4 @@ def nearest_neighbor_tanimoto(data_path: Path,
 
 
 if __name__ == '__main__':
-    args = Args().parse_args()
-
-    nearest_neighbor_tanimoto(
-        data_path=args.data_path,
-        reference_data_path=args.reference_data_path,
-        save_path=args.save_path,
-        smiles_column=args.smiles_column,
-        reference_smiles_column=args.reference_smiles_column,
-        reference_name=args.reference_name
-    )
+    nearest_neighbor_tanimoto(**Args().parse_args().as_dict())
