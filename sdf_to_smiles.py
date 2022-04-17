@@ -13,9 +13,6 @@ class Args(Tap):
     save_path: Path  # Path to a CSV file where SMILES strings will be saved.
     properties: Optional[set[str]] = None  # Set of properties to extract from the SDF for each molecule.
 
-    def process_args(self) -> None:
-        self.save_path.parent.mkdir(parents=True, exist_ok=True)
-
 
 def sdf_to_smiles(data_path: Path,
                   save_path: Path,
@@ -52,7 +49,7 @@ def sdf_to_smiles(data_path: Path,
                 prop: mol.GetProp(prop)
                 for prop in properties
             }
-        } for mol in tqdm(mols, desc='Mol to SMILES in DataFrame')
+        } for mol in tqdm(mols, desc='Mol to SMILES')
     ])
 
     # Print stats
@@ -63,6 +60,7 @@ def sdf_to_smiles(data_path: Path,
         print(f'Number of unique {prop} = {data[prop].nunique():,}')
 
     # Save data as CSV
+    save_path.parent.mkdir(parents=True, exist_ok=True)
     data.to_csv(save_path, index=False)
 
 
