@@ -26,6 +26,8 @@ conda activate chem_utils
 
 - [`nearest_neighbor_tanimoto.py`](https://github.com/swansonk14/chem_utils/blob/main/nearest_neighbor_tanimoto.py): Given a dataset of molecules, computes the nearest neighbor molecule based on Tanimoto similarity (with Morgan fingerprints) in a second dataset.
 
+- [`regression_to_classification.py`](https://github.com/swansonk14/chem_utils/blob/main/regression_to_classification.py): Converts regression data to classification data using given thresholds.
+
 - [`sdf_to_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/sdf_to_smiles.py): Converts an SDF file to a CSV file with SMILES.
 
 - [`visualize_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/visualize_molecules.py): Converts a file of SMILES to images of molecular structures.
