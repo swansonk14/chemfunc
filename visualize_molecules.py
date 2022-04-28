@@ -1,7 +1,7 @@
 """Converts molecule SMILES to grids of images."""
 import math
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 import pandas as pd
 from rdkit import Chem
@@ -17,6 +17,7 @@ class Args(Tap):
     num_rows: int = 4  # Number of rows of molecules/rationales per image.
     mols_per_row: int = 8  # Number of molecules/rationales per row.
     num_molecules: Optional[int] = None  # Number of molecules to visualize (if None, visualizes all molecules).
+    image_format: Literal['PNG', 'SVG'] = 'PNG'  # Image format to use when saving images.
 
 
 def visualize_molecules(data_path: Path,
@@ -24,7 +25,8 @@ def visualize_molecules(data_path: Path,
                         smiles_column: str = 'smiles',
                         num_rows: int = 4,
                         mols_per_row: int = 8,
-                        num_molecules: Optional[int] = None) -> None:
+                        num_molecules: Optional[int] = None,
+                        image_format: Literal['PNG', 'SVG'] = 'PNG') -> None:
     """Converts molecule SMILES to grids of images.
 
     :param data_path: Path to CSV file containing SMILES.
@@ -33,6 +35,7 @@ def visualize_molecules(data_path: Path,
     :param num_rows: Number of rows of molecules/rationales per image.
     :param mols_per_row: Number of molecules/rationales per row.
     :param num_molecules: Number of molecules to visualize (if None, visualizes all molecules).
+    :param image_format: Image format to use when saving images.
     """
     # Load data
     data = pd.read_csv(data_path)
@@ -57,9 +60,19 @@ def visualize_molecules(data_path: Path,
             image_mols,
             molsPerRow=mols_per_row,
             subImgSize=(600, 600),
-            legends=[f'Molecule {i + j + 1}' for j in range(len(image_mols))]
+            legends=[f'Molecule {i + j + 1}' for j in range(len(image_mols))],
+            useSVG=image_format == 'SVG'
         )
-        img.save(save_dir / f'{str(i // mols_per_image + 1).zfill(num_digits)}.png')
+
+        save_path = save_dir / f'{str(i // mols_per_image + 1).zfill(num_digits)}.{image_format.lower()}'
+
+        if image_format == 'SVG':
+            with open(save_path, 'w') as f:
+                f.write(img)
+        elif image_format == 'PNG':
+            img.save(save_path)
+        else:
+            raise ValueError(f'Image format "{image_format}" is not supported.')
 
 
 if __name__ == '__main__':
