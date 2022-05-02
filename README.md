@@ -33,3 +33,5 @@ conda activate chem_utils
 - [`sdf_to_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/sdf_to_smiles.py): Converts an SDF file to a CSV file with SMILES.
 
 - [`visualize_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/visualize_molecules.py): Converts a file of SMILES to images of molecular structures.
+
+- [`visualize_reactions.py`](https://github.com/swansonk14/chem_utils/blob/main/visualize_reactions.py): Converts a file of reaction SMARTS to images of chemical reactions.
