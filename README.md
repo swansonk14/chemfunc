@@ -22,6 +22,8 @@ conda activate chem_utils
 
 - [`dimensionality_reduction.py`](https://github.com/swansonk14/chem_utils/blob/main/dimensionality_reduction.py): Visualizes molecules in 2D by performing dimensionality reduction (t-SNE or UMAP) on Morgan fingerprints.
 
+- [`measure_experimental_reproducibility.py`](https://github.com/swansonk14/chem_utils/blob/main/measure_experimental_reproducibility.py): Measures the experimental reproducibility of two biological replicates by using one replicate to predict the other.
+
 - [`molecular_weight_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/molecular_weight_distribution.py): Plots the distribution of molecular weights of a set of molecules.
 
 - [`morgan_fingerprint.py`](https://github.com/swansonk14/chem_utils/blob/main/morgan_fingerprint.py): Contains functions that compute Morgan fingerprints. Parallelized for speed.
