@@ -18,6 +18,8 @@ conda activate chem_utils
 
 - [`canonicalize_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/canonicalize_smiles.py): Canonicalizes SMILES using RDKit canonicalization and optionally strips salts.
 
+- [`chemical_diversity.py`](https://github.com/swansonk14/chem_utils/blob/main/chemical_diversity.py): Computes the chemical diversity of a set of molecules in terms of Tanimoto distances.
+
 - [`cluster_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/cluster_molecules.py): Performs k-means clustering to cluster molecules based on Morgan fingerprints.
 
 - [`dimensionality_reduction.py`](https://github.com/swansonk14/chem_utils/blob/main/dimensionality_reduction.py): Visualizes molecules in 2D by performing dimensionality reduction (t-SNE or UMAP) on Morgan fingerprints.

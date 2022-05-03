@@ -24,17 +24,18 @@ class Args(Tap):
 
 
 def compute_pairwise_tanimoto_distances(mols_1: list[Union[str, Chem.Mol]],
-                                        mols_2: list[Union[str, Chem.Mol]]) -> np.ndarray:
+                                        mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
     """
-    Computes pairwise Tanimoto distances between the molecules in :attr:`mols_1` and :attr:`mols_1`.
+    Computes pairwise Tanimoto distances between the molecules in mols_1 and mols_2.
 
     :param mols_1: A list of molecules, either SMILES strings or RDKit molecules.
     :param mols_2: A list of molecules, either SMILES strings or RDKit molecules.
+                   If None, copies mols_1 list.
     :return: A 2D numpy array of pairwise distances.
     """
     # Compute Morgan fingerprints
     fps_1 = np.array(compute_morgan_fingerprints(mols_1), dtype=bool)
-    fps_2 = np.array(compute_morgan_fingerprints(mols_2), dtype=bool)
+    fps_2 = np.array(compute_morgan_fingerprints(mols_2), dtype=bool) if mols_2 is not None else fps_1
 
     # Compute pairwise distances
     tanimoto_distances = pairwise_distances(fps_1, fps_2, metric='jaccard', n_jobs=-1)
