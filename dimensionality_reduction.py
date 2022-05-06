@@ -18,8 +18,8 @@ from morgan_fingerprint import compute_morgan_fingerprints
 
 class Args(Tap):
     data_paths: list[Path]  # Path to CSV files containing SMILES.
-    method: Literal['t-SNE', 'UMAP']  # Dimensionality reduction method.
     save_path: Path  # Path to a PDF file where the dimensionality reduction plot will be saved.
+    method: Literal['t-SNE', 'UMAP'] = 't-SNE'  # Dimensionality reduction method.
     max_molecules: Optional[list[int]] = None  # Maximum number of molecules sampled in each dataset.
     smiles_columns: Optional[list[str]] = None  # Name of the columns in the smiles_paths files containing SMILES.
     """If just one SMILES column is provided, it is applied to all files. Defaults to 'smiles'."""
@@ -28,8 +28,8 @@ class Args(Tap):
 
 
 def dimesionality_reduction(data_paths: list[Path],
-                            method: Literal['t-SNE', 'UMAP'],
                             save_path: Path,
+                            method: Literal['t-SNE', 'UMAP'] = 't-SNE',
                             max_molecules: Optional[list[int]] = None,
                             smiles_columns: Optional[list[Path]] = None,
                             data_names: Optional[list[str]] = None,
@@ -37,8 +37,8 @@ def dimesionality_reduction(data_paths: list[Path],
     """Runs dimensionality reduction (t-SNE or UMAP) on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.
-    :param method: Dimensionality reduction method.
     :param save_path: Path to a PDF file where the dimensionality reduction plot will be saved.
+    :param method: Dimensionality reduction method.
     :param max_molecules: Maximum number of molecules sampled in each dataset.
                           If just one is provided, it is applied to all files.
     :param smiles_columns: Name of the columns containing SMILES. If just one is provided, it is applied to all files.
@@ -91,8 +91,8 @@ def dimesionality_reduction(data_paths: list[Path],
         # Subsample if dataset is too large
         if max_mols is not None and len(new_smiles) > max_mols:
             print(f'Subsampling to {max_mols:,} molecules')
-            np.random.seed(0)
-            new_smiles = np.random.choice(new_smiles, size=max_mols, replace=False).tolist()
+            rng = np.random.default_rng(seed=0)
+            new_smiles = rng.choice(new_smiles, size=max_mols, replace=False).tolist()
 
         slices.append(slice(len(smiles), len(smiles) + len(new_smiles)))
         smiles += new_smiles
@@ -125,7 +125,7 @@ def dimesionality_reduction(data_paths: list[Path],
         plt.scatter(
             X[slc, 0],
             X[slc, 1],
-            s=600 if data_name in highlight_data_names else 200,
+            s=1500 if data_name in highlight_data_names else 1000,
             color=cmap(index),
             label=data_name,
             marker='*' if data_name in highlight_data_names else '.'
