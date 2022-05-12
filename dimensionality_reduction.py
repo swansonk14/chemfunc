@@ -20,6 +20,12 @@ class Args(Tap):
     data_paths: list[Path]  # Path to CSV files containing SMILES.
     save_path: Path  # Path to a PDF file where the dimensionality reduction plot will be saved.
     method: Literal['t-SNE', 'UMAP'] = 't-SNE'  # Dimensionality reduction method.
+    metric: Literal['jaccard', 'euclidean'] = 'jaccard'  # Metric to use to compared embeddings.
+    embedder: Literal['morgan', 'file'] = 'morgan'  # Embedding to use for the molecules.
+    """
+    morgan: Computes Morgan fingerprint from the SMILES.
+    file: Uses all columns except the SMILES column from the data file as the embedding.
+    """
     max_molecules: Optional[list[int]] = None  # Maximum number of molecules sampled in each dataset.
     smiles_columns: Optional[list[str]] = None  # Name of the columns in the smiles_paths files containing SMILES.
     """If just one SMILES column is provided, it is applied to all files. Defaults to 'smiles'."""
@@ -27,18 +33,24 @@ class Args(Tap):
     highlight_data_names: Optional[set[str]] = None  # Names of the data files to highlight in the plot.
 
 
-def dimesionality_reduction(data_paths: list[Path],
-                            save_path: Path,
-                            method: Literal['t-SNE', 'UMAP'] = 't-SNE',
-                            max_molecules: Optional[list[int]] = None,
-                            smiles_columns: Optional[list[Path]] = None,
-                            data_names: Optional[list[str]] = None,
-                            highlight_data_names: Optional[set[str]] = None):
+def dimensionality_reduction(data_paths: list[Path],
+                             save_path: Path,
+                             method: Literal['t-SNE', 'UMAP'] = 't-SNE',
+                             metric: Literal['jaccard', 'euclidean'] = 'jaccard',
+                             embedder: Literal['morgan', 'file'] = 'morgan',
+                             max_molecules: Optional[list[int]] = None,
+                             smiles_columns: Optional[list[Path]] = None,
+                             data_names: Optional[list[str]] = None,
+                             highlight_data_names: Optional[set[str]] = None) -> None:
     """Runs dimensionality reduction (t-SNE or UMAP) on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.
     :param save_path: Path to a PDF file where the dimensionality reduction plot will be saved.
     :param method: Dimensionality reduction method.
+    :param metric: Metric to use to compared embeddings.
+    :param embedder: Embedding to use for the molecules.
+                     morgan: Computes Morgan fingerprint from the SMILES.
+                     file: Uses all columns except the SMILES column from the data file as the embedding.
     :param max_molecules: Maximum number of molecules sampled in each dataset.
                           If just one is provided, it is applied to all files.
     :param smiles_columns: Name of the columns containing SMILES. If just one is provided, it is applied to all files.
@@ -81,36 +93,49 @@ def dimesionality_reduction(data_paths: list[Path],
         raise ValueError('Not enough colors for more than 20 data paths.')
 
     # Load data and subsample SMILES
-    smiles, slices = [], []
+    smiles, slices, embeddings = [], [], []
     for data_path, smiles_column, data_name, max_mols in tqdm(zip(data_paths, smiles_columns, data_names, max_molecules),
                                                               total=len(data_paths), desc='Loading data'):
         # Load data
-        new_smiles = list(pd.read_csv(data_path)[smiles_column])
-        print(f'{data_name}: {len(new_smiles):,}')
+        data = pd.read_csv(data_path)
+        print(f'{data_name}: {len(data):,}')
 
         # Subsample if dataset is too large
-        if max_mols is not None and len(new_smiles) > max_mols:
+        if max_mols is not None and len(data) > max_mols:
             print(f'Subsampling to {max_mols:,} molecules')
-            rng = np.random.default_rng(seed=0)
-            new_smiles = rng.choice(new_smiles, size=max_mols, replace=False).tolist()
+            data = data.sample(n=max_mols, replace=False, random_state=0)
 
-        slices.append(slice(len(smiles), len(smiles) + len(new_smiles)))
-        smiles += new_smiles
+        # Update slices
+        slices.append(slice(len(smiles), len(smiles) + len(data)))
 
-    # Compute Morgan fingerprints
-    morgans = compute_morgan_fingerprints(smiles)
+        # Update SMILES
+        smiles += list(data[smiles_column])
+
+        # Get molecule embeddings if provided
+        if embedder == 'file':
+            embedding_columns = list(data.columns)
+            embedding_columns.remove(smiles_column)
+            embeddings.append(data[embedding_columns].to_numpy())
+
+    # Get/compute molecule embeddings
+    if embedder == 'morgan':
+        embeddings = compute_morgan_fingerprints(smiles)
+    elif embedder == 'file':
+        embeddings = np.concatenate(embeddings)
+    else:
+        raise ValueError(f'Embedder "{embedder}" is not supported.')
 
     # Run dimensionality reduction
     if method == 't-SNE':
-        reducer = TSNE(random_state=0, metric='jaccard', init='pca', n_jobs=-1, square_distances=True)
+        reducer = TSNE(random_state=0, metric=metric, init='pca', n_jobs=-1, square_distances=True)
     elif method == 'UMAP':
-        reducer = UMAP(random_state=0, metric='jaccard')
+        reducer = UMAP(random_state=0, metric=metric)
     else:
         raise ValueError(f'Dimensionality reduction method "{method}" is not supported.')
 
     print(f'Running {method}')
     start = time.time()
-    X = reducer.fit_transform(morgans)
+    X = reducer.fit_transform(embeddings)
     print(f'time = {time.time() - start:.2f} seconds')
 
     print('Plotting')
@@ -119,7 +144,7 @@ def dimesionality_reduction(data_paths: list[Path],
 
     plt.clf()
     plt.figure(figsize=(64, 48))
-    plt.title(f'{method} using Morgan fingerprint with Jaccard similarity', fontsize=100)
+    plt.title(f'{method} using Morgan fingerprint with {metric.title()} similarity', fontsize=100)
 
     for index, (slc, data_name) in enumerate(zip(slices, data_names)):
         plt.scatter(
@@ -140,4 +165,4 @@ def dimesionality_reduction(data_paths: list[Path],
 
 
 if __name__ == '__main__':
-    dimesionality_reduction(**Args().parse_args().as_dict())
+    dimensionality_reduction(**Args().parse_args().as_dict())
