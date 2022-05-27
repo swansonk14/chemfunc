@@ -13,6 +13,7 @@ from tap import Tap
 from tqdm import tqdm
 from umap import UMAP
 
+from constants import SMILES_COLUMN
 from morgan_fingerprint import compute_morgan_fingerprints
 
 
@@ -68,7 +69,7 @@ def dimensionality_reduction(data_paths: list[Path],
 
     # Validate smiles_columns
     if smiles_columns is None:
-        smiles_columns = ['smiles'] * len(data_paths)
+        smiles_columns = [SMILES_COLUMN] * len(data_paths)
     elif len(smiles_columns) == 1:
         smiles_columns = smiles_columns * len(data_paths)
     elif len(smiles_columns) != len(data_paths):

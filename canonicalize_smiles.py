@@ -7,11 +7,13 @@ from rdkit.Chem.SaltRemover import SaltRemover
 from tap import Tap
 from tqdm import tqdm
 
+from constants import SMILES_COLUMN
+
 
 class Args(Tap):
     data_path: Path  # Path to CSV file containing SMILES.
-    smiles_column: str = 'smiles'  # Name of the column containing SMILES.
     save_path: Path  # Path where CSV file with canonicalized SMILES will be saved.
+    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
     remove_salts: bool = False  # Whether to remove salts from the SMILES.
 
     def process_args(self) -> None:
@@ -19,14 +21,14 @@ class Args(Tap):
 
 
 def canonicalize_smiles(data_path: Path,
-                        smiles_column: str,
                         save_path: Path,
+                        smiles_column: str = SMILES_COLUMN,
                         remove_salts: bool = False) -> None:
     """Canonicalizes SMILES using RDKit canonicalization and optionally strips salts.
 
     :param data_path: Path to CSV file containing SMILES.
-    :param smiles_column: Name of the column containing SMILES.
     :param save_path: Path where CSV file with canonicalized SMILES will be saved.
+    :param smiles_column: Name of the column containing SMILES.
     :param remove_salts: Whether to remove salts from the SMILES.
     """
     # Load data

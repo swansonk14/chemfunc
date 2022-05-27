@@ -9,11 +9,13 @@ from rdkit.Chem import Draw
 from tap import Tap
 from tqdm import trange, tqdm
 
+from constants import SMILES_COLUMN
+
 
 class Args(Tap):
     data_path: Path  # Path to CSV file containing SMILES.
     save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
-    smiles_column: str = 'smiles'  # Name of the column containing SMILES.
+    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
     num_rows: int = 4  # Number of rows of molecules/rationales per image.
     mols_per_row: int = 8  # Number of molecules/rationales per row.
     num_molecules: Optional[int] = None  # Number of molecules to visualize (if None, visualizes all molecules).
@@ -22,7 +24,7 @@ class Args(Tap):
 
 def visualize_molecules(data_path: Path,
                         save_dir: Path,
-                        smiles_column: str = 'smiles',
+                        smiles_column: str = SMILES_COLUMN,
                         num_rows: int = 4,
                         mols_per_row: int = 8,
                         num_molecules: Optional[int] = None,

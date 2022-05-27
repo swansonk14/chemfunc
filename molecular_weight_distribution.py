@@ -9,11 +9,13 @@ from rdkit.Chem.Descriptors import MolWt
 from tap import Tap
 from tqdm import tqdm
 
+from constants import SMILES_COLUMN
+
 
 class Args(Tap):
     data_path: Path  # Path to a CSV file containing SMILES.
     save_path: Path  # Path to a PDF file where the plot of molecular weights will be saved.
-    smiles_column: str = 'smiles'  # The name of the column in data_path containing SMILES.
+    smiles_column: str = SMILES_COLUMN  # The name of the column in data_path containing SMILES.
 
 
 def molecular_weight(smiles: str) -> float:
@@ -30,7 +32,7 @@ def molecular_weight(smiles: str) -> float:
 
 def molecular_weight_distribution(data_path: Path,
                                   save_path: Path,
-                                  smiles_column: str = 'smiles') -> None:
+                                  smiles_column: str = SMILES_COLUMN) -> None:
     """Computes the distribution of molecular weights over a set of molecules.
 
     :param data_path: Path to a CSV file containing SMILES.

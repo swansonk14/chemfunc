@@ -15,7 +15,7 @@ class Args(Tap):
 
 def visualize_reactions(data_path: Path,
                         save_dir: Path,
-                        smarts_column: str = 'smiles') -> None:
+                        smarts_column: str = 'smarts') -> None:
     """Converts reaction SMARTS to images
 
     :param data_path: Path to CSV file containing reaction SMARTS.

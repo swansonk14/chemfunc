@@ -5,16 +5,17 @@ import numpy as np
 import pandas as pd
 from tap import Tap
 
+from constants import SMILES_COLUMN
 from nearest_neighbor_tanimoto import compute_pairwise_tanimoto_distances
 
 
 class Args(Tap):
     data_path: Path  # Path to CSV file containing molecule SMILES.
-    smiles_column: str = 'smiles'  # Name of the column containing SMILES.
+    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
 
 
 def chemical_diversity(data_path: Path,
-                       smiles_column: str = 'smiles') -> None:
+                       smiles_column: str = SMILES_COLUMN) -> None:
     """Computes the chemical diversity of a list of molecules in terms of Tanimoto distances.
 
     Note: Does NOT remove duplicate SMILES before computing pairwise distances.

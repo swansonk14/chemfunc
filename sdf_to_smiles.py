@@ -7,6 +7,8 @@ from rdkit import Chem
 from tap import Tap
 from tqdm import tqdm
 
+from constants import SMILES_COLUMN
+
 
 class Args(Tap):
     data_path: Path  # Path to an SDF file.
@@ -44,7 +46,7 @@ def sdf_to_smiles(data_path: Path,
     # Put data in Pandas DataFrame
     data = pd.DataFrame(data=[
         {
-            'smiles': Chem.MolToSmiles(mol),
+            SMILES_COLUMN: Chem.MolToSmiles(mol),
             **{
                 prop: mol.GetProp(prop)
                 for prop in properties
@@ -54,7 +56,7 @@ def sdf_to_smiles(data_path: Path,
 
     # Print stats
     print(f'Data size = {len(data):,}')
-    print(f'Number of unique smiles = {data["smiles"].nunique():,}')
+    print(f'Number of unique smiles = {data[SMILES_COLUMN].nunique():,}')
 
     for prop in properties:
         print(f'Number of unique {prop} = {data[prop].nunique():,}')

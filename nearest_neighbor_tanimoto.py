@@ -10,6 +10,7 @@ patch_sklearn()
 from sklearn.metrics import pairwise_distances
 from tap import Tap
 
+from constants import SMILES_COLUMN
 from morgan_fingerprint import compute_morgan_fingerprints
 
 
@@ -17,7 +18,7 @@ class Args(Tap):
     data_path: Path  # Path to CSV file containing data with SMILES whose neighbors are to be computed.
     reference_data_path: Path  # Path to CSV file containing reference SMILES which will be the neighbors of data_path.
     save_path: Path  # Where the data with the neighbor info should be saved (defaults to data_path).
-    smiles_column: str = 'smiles'  # Name of the column in data_path containing SMILES.
+    smiles_column: str = SMILES_COLUMN  # Name of the column in data_path containing SMILES.
     reference_smiles_column: Optional[str] = None  # Name of the column in reference_data_path containing SMILES.
     """If None, then smiles_column is used."""
     reference_name: Optional[str] = None  # Name of the reference data when naming the new columns with neighbor info.
@@ -71,7 +72,7 @@ def add_nearest_neighbors(data: pd.DataFrame,
 def nearest_neighbor_tanimoto(data_path: Path,
                               reference_data_path: Path,
                               save_path: Path,
-                              smiles_column: str = 'smiles',
+                              smiles_column: str = SMILES_COLUMN,
                               reference_smiles_column: Optional[str] = None,
                               reference_name: Optional[str] = None):
     """Given a dataset, computes the nearest neighbor molecule by Tanimoto similarity in a second dataset.

@@ -7,19 +7,20 @@ patch_sklearn()
 from sklearn.cluster import KMeans
 from tap import Tap
 
+from constants import SMILES_COLUMN
 from morgan_fingerprint import compute_morgan_fingerprints
 
 
 class Args(Tap):
     data_path: Path  # Path to CSV file containing SMILES.
     save_path: Path  # Path to CSV file where the clustering will be saved.
-    smiles_column: str = 'smiles'  # Name of the column containing SMILES.
+    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
     num_clusters: int = 50  # Number of clusters.
 
 
 def cluster_molecules(data_path: Path,
                       save_path: Path,
-                      smiles_column: str = 'smiles',
+                      smiles_column: str = SMILES_COLUMN,
                       num_clusters: int = 50) -> None:
     """Clusters molecules by Morgan fingerprint.
 
