@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 from sklearnex import patch_sklearn
 patch_sklearn()
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, MiniBatchKMeans
 from tap import Tap
 
 from constants import SMILES_COLUMN
@@ -16,18 +16,21 @@ class Args(Tap):
     save_path: Path  # Path to CSV file where the clustering will be saved.
     smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
     num_clusters: int = 50  # Number of clusters.
+    mini_batch: bool = False  # Whether to use mini batch k-means instead of standard k-means.
 
 
 def cluster_molecules(data_path: Path,
                       save_path: Path,
                       smiles_column: str = SMILES_COLUMN,
-                      num_clusters: int = 50) -> None:
+                      num_clusters: int = 50,
+                      mini_batch: bool = False) -> None:
     """Clusters molecules by Morgan fingerprint.
 
     :param data_path: Path to CSV file containing SMILES.
     :param save_path: Path to CSV file where the clustering will be saved.
     :param smiles_column: Name of the column containing SMILES.
     :param num_clusters: Number of clusters.
+    :param mini_batch: Whether to use mini batch k-means instead of standard k-means.
     """
     print('Loading data')
     data = pd.read_csv(data_path)
@@ -37,7 +40,13 @@ def cluster_molecules(data_path: Path,
     morgans = compute_morgan_fingerprints(data[smiles_column])
 
     print('Clustering')
-    kmeans = KMeans(n_clusters=num_clusters, random_state=0).fit(morgans)
+    if mini_batch:
+        kmeans = MiniBatchKMeans(n_clusters=num_clusters, random_state=0)
+    else:
+        kmeans = KMeans(n_clusters=num_clusters, random_state=0)
+
+    kmeans.fit(morgans)
+
     data['cluster_label'] = kmeans.labels_ + 1
 
     print('Saving data')
