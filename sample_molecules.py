@@ -3,9 +3,8 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-from sklearnex import patch_sklearn
-patch_sklearn()
 from tap import Tap
+from tqdm import tqdm
 
 
 class Args(Tap):
@@ -41,7 +40,7 @@ def sample_molecules(data_path: Path,
         print(f'Selecting {num_molecules:,} molecules per cluster')
         sampled = pd.concat([
             data[data[cluster_column] == cluster_label].sample(n=num_molecules, random_state=0)
-            for cluster_label in sorted(data[cluster_column].unique())
+            for cluster_label in tqdm(sorted(data[cluster_column].unique()))
         ])
     else:
         print(f'Selection {num_molecules:,} molecules')
