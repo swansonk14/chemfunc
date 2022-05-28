@@ -34,6 +34,8 @@ conda activate chem_utils
 
 - [`regression_to_classification.py`](https://github.com/swansonk14/chem_utils/blob/main/regression_to_classification.py): Converts regression data to classification data using given thresholds.
 
+- [`sample_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/sample_molecules.py): Samples molecules from a CSV file, either uniformly at random across the entire dataset or uniformly at random from each cluster within the data.
+
 - [`sdf_to_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/sdf_to_smiles.py): Converts an SDF file to a CSV file with SMILES.
 
 - [`visualize_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/visualize_molecules.py): Converts a file of SMILES to images of molecular structures.
