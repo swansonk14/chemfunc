@@ -159,6 +159,7 @@ def dimensionality_reduction(data_paths: list[Path],
 
     plt.legend(fontsize=50)
     plt.xticks([]), plt.yticks([])
+    plt.tight_layout()
 
     print('Saving plot')
     save_path.parent.mkdir(parents=True, exist_ok=True)

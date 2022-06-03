@@ -52,6 +52,7 @@ def molecular_weight_distribution(data_path: Path,
     plt.xlabel('Molecular Weight')
     plt.ylabel('Density')
     plt.title('Molecular Weight Distribution')
+    plt.tight_layout()
 
     # Save plot
     save_path.parent.mkdir(parents=True, exist_ok=True)
