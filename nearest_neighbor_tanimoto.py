@@ -17,7 +17,7 @@ from morgan_fingerprint import compute_morgan_fingerprints
 class Args(Tap):
     data_path: Path  # Path to CSV file containing data with SMILES whose neighbors are to be computed.
     reference_data_path: Path  # Path to CSV file containing reference SMILES which will be the neighbors of data_path.
-    save_path: Path  # Where the data with the neighbor info should be saved (defaults to data_path).
+    save_path: Optional[Path] = None  # Where the data with the neighbor info should be saved (defaults to data_path).
     smiles_column: str = SMILES_COLUMN  # Name of the column in data_path containing SMILES.
     reference_smiles_column: Optional[str] = None  # Name of the column in reference_data_path containing SMILES.
     """If None, then smiles_column is used."""
@@ -71,7 +71,7 @@ def add_nearest_neighbors(data: pd.DataFrame,
 
 def nearest_neighbor_tanimoto(data_path: Path,
                               reference_data_path: Path,
-                              save_path: Path,
+                              save_path: Optional[Path] = None,
                               smiles_column: str = SMILES_COLUMN,
                               reference_smiles_column: Optional[str] = None,
                               reference_name: Optional[str] = None):
@@ -85,6 +85,10 @@ def nearest_neighbor_tanimoto(data_path: Path,
                                     If None, then smiles_column is used.
     :param reference_name: Name of the reference data when naming the new columns with neighbor info.
     """
+    # Set save path
+    if save_path is None:
+        save_path = data_path
+
     # Set reference smiles column
     if reference_smiles_column is None:
         reference_smiles_column = smiles_column
