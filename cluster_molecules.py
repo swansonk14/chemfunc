@@ -8,7 +8,7 @@ patch_sklearn()
 from sklearn.cluster import KMeans, MiniBatchKMeans
 from tap import Tap
 
-from constants import SMILES_COLUMN
+from constants import CLUSTER_COLUMN, SMILES_COLUMN
 from morgan_fingerprint import compute_morgan_fingerprints
 
 
@@ -52,7 +52,7 @@ def cluster_molecules(data_path: Path,
 
     kmeans.fit(morgans)
 
-    data['cluster_label'] = kmeans.labels_ + 1
+    data[CLUSTER_COLUMN] = kmeans.labels_ + 1
 
     print('Saving data')
     save_path.parent.mkdir(parents=True, exist_ok=True)
