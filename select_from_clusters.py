@@ -34,7 +34,7 @@ def filter_molecules(data_path: Path,
 
     # Select molecules
     data.sort_values(by=value_column, ascending=not descending, inplace=True)
-    data.drop_duplicates(by=cluster_column, inplace=True)
+    data.drop_duplicates(subset=[cluster_column], inplace=True)
     print(f'Final data size = {len(data):,}')
 
     # Save data
