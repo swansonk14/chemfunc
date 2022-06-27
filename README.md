@@ -32,7 +32,7 @@ conda activate chem_utils
 
 - [`morgan_fingerprint.py`](https://github.com/swansonk14/chem_utils/blob/main/morgan_fingerprint.py): Contains functions that compute Morgan fingerprints. Parallelized for speed.
 
-- [`nearest_neighbor_tanimoto.py`](https://github.com/swansonk14/chem_utils/blob/main/nearest_neighbor_tanimoto.py): Given a dataset of molecules, computes the nearest neighbor molecule based on Tanimoto similarity (with Morgan fingerprints) in a second dataset.
+- [`nearest_neighbor.py`](https://github.com/swansonk14/chem_utils/blob/main/nearest_neighbor.py): Given a dataset of molecules, computes the nearest neighbor molecule in a second dataset using one of several similarity metrics.
 
 - [`regression_to_classification.py`](https://github.com/swansonk14/chem_utils/blob/main/regression_to_classification.py): Converts regression data to classification data using given thresholds.
 

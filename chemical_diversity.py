@@ -6,7 +6,7 @@ import pandas as pd
 from tap import Tap
 
 from constants import SMILES_COLUMN
-from nearest_neighbor_tanimoto import compute_pairwise_tanimoto_distances
+from nearest_neighbor import compute_pairwise_tanimoto_distances
 
 
 class Args(Tap):
