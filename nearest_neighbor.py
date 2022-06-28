@@ -1,14 +1,18 @@
 """Given a dataset of molecules, computes the nearest neighbor molecule in a second dataset using one of several similarity metrics."""
+from itertools import product
+from multiprocessing import Pool
 from pathlib import Path
-from typing import Literal, Optional, Union
+from typing import Literal, Iterable, Optional, Union
 
 import numpy as np
 import pandas as pd
 from rdkit import Chem
+from rdkit.Chem.rdFMCS import FindMCS
 from sklearnex import patch_sklearn
 patch_sklearn()
 from sklearn.metrics import pairwise_distances
 from tap import Tap
+from tqdm import tqdm
 
 from constants import SMILES_COLUMN
 from morgan_fingerprint import compute_morgan_fingerprints
@@ -50,6 +54,16 @@ def compute_pairwise_tanimoto_distances(mols_1: list[Union[str, Chem.Mol]],
     return tanimoto_distances
 
 
+def compute_mcs_size(mols: Iterable[Chem.Mol]) -> int:
+    """
+    Computes the size (number of atoms) of the maximum common substructure between molecules.
+
+    :param mols: An iterable of molecules.
+    :return: The size (number of atoms) of the maximum common substructure between molecules.
+    """
+    return FindMCS(mols).numAtoms
+
+
 def compute_pairwise_mcs_similarities(mols_1: list[Union[str, Chem.Mol]],
                                       mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
     """
@@ -60,8 +74,25 @@ def compute_pairwise_mcs_similarities(mols_1: list[Union[str, Chem.Mol]],
                    If None, copies mols_1 list.
     :return: A 2D numpy array of pairwise similarities.
     """
-    # Compute pairwise MCS distances
-    raise NotImplementedError  # TODO
+    # Convert SMILES to RDKit molecules if needed
+    mols_1 = [Chem.MolFromSmiles(mol) if isinstance(mol, str) else mol for mol in mols_1]
+
+    if mols_2 is not None:
+        mols_2 = [Chem.MolFromSmiles(mol) if isinstance(mol, str) else mol for mol in mols_2]
+    else:
+        mols_2 = mols_1
+
+    # Compute pairwise MCS similarities
+    with Pool() as pool:
+        pairwise_mcs = np.array(list(tqdm(pool.imap(compute_mcs_size, product(mols_1, mols_2)),
+                                          total=len(mols_1) * len(mols_2))))
+
+    pairwise_mcs = pairwise_mcs.reshape(len(mols_1), len(mols_2))
+
+    num_atoms_2 = np.array([mol.GetNumAtoms() for mol in mols_2])
+    mcs_similarities = pairwise_mcs / num_atoms_2
+
+    return mcs_similarities
 
 
 def compute_pairwise_tversky_similarities(mols_1: list[Union[str, Chem.Mol]],
@@ -81,7 +112,7 @@ def compute_pairwise_tversky_similarities(mols_1: list[Union[str, Chem.Mol]],
     fps_1 = np.array(compute_morgan_fingerprints(mols_1), dtype=int)
     fps_2 = np.array(compute_morgan_fingerprints(mols_2), dtype=int) if mols_2 is not None else fps_1
 
-    # Compute pairwise Tversky distances
+    # Compute pairwise Tversky similarities
     intersection = fps_1 @ fps_2.transpose()
     size_2 = fps_2.sum(axis=1)
     tversky_similarities = intersection / size_2
