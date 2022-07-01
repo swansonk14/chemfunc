@@ -14,6 +14,11 @@ Activate conda environment.
 conda activate chem_utils
 ```
 
+Pip install package.
+```
+pip install -e .
+```
+
 ## Scripts
 
 - [`canonicalize_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/canonicalize_smiles.py): Canonicalizes SMILES using RDKit canonicalization and optionally strips salts.

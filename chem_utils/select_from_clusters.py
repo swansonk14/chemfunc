@@ -2,17 +2,8 @@
 from pathlib import Path
 
 import pandas as pd
-from tap import Tap
 
-from constants import CLUSTER_COLUMN
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing molecules.
-    save_path: Path  # Path to CSV file where selected molecules will be saved.
-    value_column: str  # Name of the column containing values to sort molecules by.
-    cluster_column: str = CLUSTER_COLUMN  # Name of the column containing cluster labels.
-    descending: bool = False  # Sorts molecules in each cluster from highest to lowest rather than lowest to highest.
+from chem_utils.constants import CLUSTER_COLUMN
 
 
 def filter_molecules(data_path: Path,
@@ -43,4 +34,13 @@ def filter_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing molecules.
+        save_path: Path  # Path to CSV file where selected molecules will be saved.
+        value_column: str  # Name of the column containing values to sort molecules by.
+        cluster_column: str = CLUSTER_COLUMN  # Name of the column containing cluster labels.
+        descending: bool = False  # Sorts molecules in each cluster from highest to lowest rather than lowest to highest.
+
     filter_molecules(**Args().parse_args().as_dict())

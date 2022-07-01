@@ -2,15 +2,6 @@
 from pathlib import Path
 
 import pandas as pd
-from tap import Tap
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing molecules.
-    save_path: Path # Path to CSV file where filtered molecules will be saved.
-    filter_column: str  # Name of the column to use to filter molecules.
-    min_value: float = -float('inf')  # Minimum value (inclusive) for the filter_column.
-    max_value: float = float('inf')  # Maximum value (inclusive) for the filter_column.
 
 
 def filter_molecules(data_path: Path,
@@ -40,4 +31,13 @@ def filter_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing molecules.
+        save_path: Path  # Path to CSV file where filtered molecules will be saved.
+        filter_column: str  # Name of the column to use to filter molecules.
+        min_value: float = -float('inf')  # Minimum value (inclusive) for the filter_column.
+        max_value: float = float('inf')  # Maximum value (inclusive) for the filter_column.
+
     filter_molecules(**Args().parse_args().as_dict())

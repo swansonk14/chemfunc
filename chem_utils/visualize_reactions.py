@@ -3,14 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 from rdkit.Chem import AllChem, Draw
-from tap import Tap
 from tqdm import tqdm
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing reaction SMARTS.
-    save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
-    smarts_column: str = 'smarts'  # Name of the column containing reaction SMARTS.
 
 
 def visualize_reactions(data_path: Path,
@@ -43,4 +36,11 @@ def visualize_reactions(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing reaction SMARTS.
+        save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
+        smarts_column: str = 'smarts'  # Name of the column containing reaction SMARTS.
+
     visualize_reactions(**Args().parse_args().as_dict())

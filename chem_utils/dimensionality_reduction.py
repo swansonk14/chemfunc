@@ -9,29 +9,11 @@ import pandas as pd
 from sklearnex import patch_sklearn
 patch_sklearn()
 from sklearn.manifold import TSNE
-from tap import Tap
 from tqdm import tqdm
 from umap import UMAP
 
-from constants import SMILES_COLUMN
-from morgan_fingerprint import compute_morgan_fingerprints
-
-
-class Args(Tap):
-    data_paths: list[Path]  # Path to CSV files containing SMILES.
-    save_path: Path  # Path to a PDF file where the dimensionality reduction plot will be saved.
-    method: Literal['t-SNE', 'UMAP'] = 't-SNE'  # Dimensionality reduction method.
-    metric: Literal['jaccard', 'euclidean'] = 'jaccard'  # Metric to use to compared embeddings.
-    embedder: Literal['morgan', 'file'] = 'morgan'  # Embedding to use for the molecules.
-    """
-    morgan: Computes Morgan fingerprint from the SMILES.
-    file: Uses all columns except the SMILES column from the data file as the embedding.
-    """
-    max_molecules: Optional[list[int]] = None  # Maximum number of molecules sampled in each dataset.
-    smiles_columns: Optional[list[str]] = None  # Name of the columns in the smiles_paths files containing SMILES.
-    """If just one SMILES column is provided, it is applied to all files. Defaults to 'smiles'."""
-    data_names: Optional[list[str]] = None  # Names of the data files for labeling the plot.
-    highlight_data_names: Optional[set[str]] = None  # Names of the data files to highlight in the plot.
+from chem_utils.constants import SMILES_COLUMN
+from chem_utils.morgan_fingerprint import compute_morgan_fingerprints
 
 
 def dimensionality_reduction(data_paths: list[Path],
@@ -167,4 +149,22 @@ def dimensionality_reduction(data_paths: list[Path],
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_paths: list[Path]  # Path to CSV files containing SMILES.
+        save_path: Path  # Path to a PDF file where the dimensionality reduction plot will be saved.
+        method: Literal['t-SNE', 'UMAP'] = 't-SNE'  # Dimensionality reduction method.
+        metric: Literal['jaccard', 'euclidean'] = 'jaccard'  # Metric to use to compared embeddings.
+        embedder: Literal['morgan', 'file'] = 'morgan'  # Embedding to use for the molecules.
+        """
+        morgan: Computes Morgan fingerprint from the SMILES.
+        file: Uses all columns except the SMILES column from the data file as the embedding.
+        """
+        max_molecules: Optional[list[int]] = None  # Maximum number of molecules sampled in each dataset.
+        smiles_columns: Optional[list[str]] = None  # Name of the columns in the smiles_paths files containing SMILES.
+        """If just one SMILES column is provided, it is applied to all files. Defaults to 'smiles'."""
+        data_names: Optional[list[str]] = None  # Names of the data files for labeling the plot.
+        highlight_data_names: Optional[set[str]] = None  # Names of the data files to highlight in the plot.
+
     dimensionality_reduction(**Args().parse_args().as_dict())

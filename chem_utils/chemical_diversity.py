@@ -3,15 +3,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from tap import Tap
 
-from constants import SMILES_COLUMN
-from nearest_neighbor import compute_pairwise_tanimoto_distances
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing molecule SMILES.
-    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
+from chem_utils.constants import SMILES_COLUMN
+from chem_utils.nearest_neighbor import compute_pairwise_tanimoto_distances
 
 
 def chemical_diversity(data_path: Path,
@@ -50,4 +44,10 @@ def chemical_diversity(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing molecule SMILES.
+        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
+
     chemical_diversity(**Args().parse_args().as_dict())

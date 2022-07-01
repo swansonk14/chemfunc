@@ -6,20 +6,9 @@ from typing import Literal, Optional
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import Draw
-from tap import Tap
 from tqdm import trange, tqdm
 
-from constants import SMILES_COLUMN
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing SMILES.
-    save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
-    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-    num_rows: int = 4  # Number of rows of molecules/rationales per image.
-    mols_per_row: int = 8  # Number of molecules/rationales per row.
-    num_molecules: Optional[int] = None  # Number of molecules to visualize (if None, visualizes all molecules).
-    image_format: Literal['PNG', 'SVG'] = 'PNG'  # Image format to use when saving images.
+from chem_utils.constants import SMILES_COLUMN
 
 
 def visualize_molecules(data_path: Path,
@@ -78,4 +67,15 @@ def visualize_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing SMILES.
+        save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
+        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
+        num_rows: int = 4  # Number of rows of molecules/rationales per image.
+        mols_per_row: int = 8  # Number of molecules/rationales per row.
+        num_molecules: Optional[int] = None  # Number of molecules to visualize (if None, visualizes all molecules).
+        image_format: Literal['PNG', 'SVG'] = 'PNG'  # Image format to use when saving images.
+
     visualize_molecules(**Args().parse_args().as_dict())

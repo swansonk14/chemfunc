@@ -4,16 +4,9 @@ from typing import Optional
 
 import pandas as pd
 from rdkit import Chem
-from tap import Tap
 from tqdm import tqdm
 
-from constants import SMILES_COLUMN
-
-
-class Args(Tap):
-    data_path: Path  # Path to an SDF file.
-    save_path: Path  # Path to a CSV file where SMILES strings will be saved.
-    properties: Optional[set[str]] = None  # Set of properties to extract from the SDF for each molecule.
+from chem_utils.constants import SMILES_COLUMN
 
 
 def sdf_to_smiles(data_path: Path,
@@ -67,4 +60,11 @@ def sdf_to_smiles(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to an SDF file.
+        save_path: Path  # Path to a CSV file where SMILES strings will be saved.
+        properties: Optional[set[str]] = None  # Set of properties to extract from the SDF for each molecule.
+
     sdf_to_smiles(**Args().parse_args().as_dict())

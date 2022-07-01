@@ -5,8 +5,7 @@ channels:
   - rdkit
 
 dependencies:
-  - python>=3.9
-  - ipython
+  - python>=3.10
   - matplotlib
   - numpy
   - pandas

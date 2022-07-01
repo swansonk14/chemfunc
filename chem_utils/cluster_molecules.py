@@ -6,18 +6,9 @@ import pandas as pd
 from sklearnex import patch_sklearn
 patch_sklearn()
 from sklearn.cluster import KMeans, MiniBatchKMeans
-from tap import Tap
 
-from constants import CLUSTER_COLUMN, SMILES_COLUMN
-from morgan_fingerprint import compute_morgan_fingerprints
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing SMILES.
-    save_path: Optional[Path] = None  # Path to CSV file where the clustering will be saved (defaults to data_path).
-    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-    num_clusters: int = 50  # Number of clusters.
-    mini_batch: bool = False  # Whether to use mini batch k-means instead of standard k-means.
+from chem_utils.constants import CLUSTER_COLUMN, SMILES_COLUMN
+from chem_utils.morgan_fingerprint import compute_morgan_fingerprints
 
 
 def cluster_molecules(data_path: Path,
@@ -60,4 +51,13 @@ def cluster_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing SMILES.
+        save_path: Optional[Path] = None  # Path to CSV file where the clustering will be saved (defaults to data_path).
+        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
+        num_clusters: int = 50  # Number of clusters.
+        mini_batch: bool = False  # Whether to use mini batch k-means instead of standard k-means.
+
     cluster_molecules(**Args().parse_args().as_dict())

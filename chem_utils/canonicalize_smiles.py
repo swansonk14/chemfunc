@@ -4,20 +4,9 @@ from pathlib import Path
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem.SaltRemover import SaltRemover
-from tap import Tap
 from tqdm import tqdm
 
-from constants import SMILES_COLUMN
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing SMILES.
-    save_path: Path  # Path where CSV file with canonicalized SMILES will be saved.
-    smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-    remove_salts: bool = False  # Whether to remove salts from the SMILES.
-
-    def process_args(self) -> None:
-        self.save_path.parent.mkdir(parents=True, exist_ok=True)
+from chem_utils.constants import SMILES_COLUMN
 
 
 def canonicalize_smiles(data_path: Path,
@@ -46,8 +35,17 @@ def canonicalize_smiles(data_path: Path,
     data[smiles_column] = [Chem.MolToSmiles(mol) for mol in tqdm(mols, desc='Mol to SMILES')]
 
     # Save data
+    save_path.mkdir(parents=True, exist_ok=True)
     data.to_csv(save_path, index=False)
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing SMILES.
+        save_path: Path  # Path where CSV file with canonicalized SMILES will be saved.
+        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
+        remove_salts: bool = False  # Whether to remove salts from the SMILES.
+
     canonicalize_smiles(**Args().parse_args().as_dict())

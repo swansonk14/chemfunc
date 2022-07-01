@@ -3,19 +3,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from tap import Tap
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing regression data.
-    regression_column: str  # Name of the column containing regression data.
-    classification_column: str  # Name of the column where the classification data will be stored.
-    thresholds: list[float]  # Thresholds to use to convert the regression data to classification data.
-    save_path: Path  # Path to CSV file where classification data will be saved.
-    high_to_low: bool = False  # Whether class indices should be assigned from highest regression value to lowest.
-
-    def process_args(self) -> None:
-        self.save_path.parent.mkdir(parents=True, exist_ok=True)
 
 
 def regression_to_classification(data_path: Path,
@@ -47,8 +34,19 @@ def regression_to_classification(data_path: Path,
     print(data[classification_column].value_counts())
 
     # Save classification data
+    save_path.mkdir(parents=True, exist_ok=True)
     data.to_csv(save_path, index=False)
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing regression data.
+        regression_column: str  # Name of the column containing regression data.
+        classification_column: str  # Name of the column where the classification data will be stored.
+        thresholds: list[float]  # Thresholds to use to convert the regression data to classification data.
+        save_path: Path  # Path to CSV file where classification data will be saved.
+        high_to_low: bool = False  # Whether class indices should be assigned from highest regression value to lowest.
+
     regression_to_classification(**Args().parse_args().as_dict())

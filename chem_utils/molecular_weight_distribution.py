@@ -6,16 +6,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem.Descriptors import MolWt
-from tap import Tap
 from tqdm import tqdm
 
-from constants import SMILES_COLUMN
-
-
-class Args(Tap):
-    data_path: Path  # Path to a CSV file containing SMILES.
-    save_path: Path  # Path to a PDF file where the plot of molecular weights will be saved.
-    smiles_column: str = SMILES_COLUMN  # The name of the column in data_path containing SMILES.
+from chem_utils.constants import SMILES_COLUMN
 
 
 def molecular_weight(smiles: str) -> float:
@@ -60,4 +53,11 @@ def molecular_weight_distribution(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to a CSV file containing SMILES.
+        save_path: Path  # Path to a PDF file where the plot of molecular weights will be saved.
+        smiles_column: str = SMILES_COLUMN  # The name of the column in data_path containing SMILES.
+
     molecular_weight_distribution(**Args().parse_args().as_dict())

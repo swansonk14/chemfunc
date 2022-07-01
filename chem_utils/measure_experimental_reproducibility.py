@@ -4,15 +4,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import auc, mean_squared_error, precision_recall_curve, r2_score, roc_auc_score
-from tap import Tap
-
-
-class Args(Tap):
-    data_path: Path  # Path to CSV file containing two biological replicates.
-    rep_1_column: str  # Name of the column containing the first biological replicate.
-    rep_2_column: str  # Name of the column containing the second biological replicate.
-    threshold: float  # Threshold for binarizing the data.
-    plot: bool = False  # Whether to plot the correlation between the two replicates.
 
 
 def prc_auc_score(targets: list[int], preds: list[float]) -> float:
@@ -81,4 +72,13 @@ def measure_experimental_reproducibility(data_path: Path,
 
 
 if __name__ == '__main__':
+    from tap import Tap
+
+    class Args(Tap):
+        data_path: Path  # Path to CSV file containing two biological replicates.
+        rep_1_column: str  # Name of the column containing the first biological replicate.
+        rep_2_column: str  # Name of the column containing the second biological replicate.
+        threshold: float  # Threshold for binarizing the data.
+        plot: bool = False  # Whether to plot the correlation between the two replicates.
+
     measure_experimental_reproducibility(**Args().parse_args().as_dict())
