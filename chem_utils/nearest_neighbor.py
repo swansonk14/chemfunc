@@ -2,7 +2,7 @@
 from itertools import product
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Literal, Iterable, Optional, Union
+from typing import Callable, Literal, Iterable, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -13,28 +13,59 @@ patch_sklearn()
 from sklearn.metrics import pairwise_distances
 from tqdm import tqdm
 
-from chem_utils.constants import SMILES_COLUMN
-from chem_utils.morgan_fingerprint import compute_fingerprints
+from chem_utils.constants import Molecule, SMILES_COLUMN
+from chem_utils.molecular_fingerprints import compute_fingerprints
 
 
-def compute_pairwise_tanimoto_distances(mols_1: list[Union[str, Chem.Mol]],
-                                        mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
+SimilarityFunction = Callable[[Iterable[Molecule], Optional[Iterable[Molecule]]], np.ndarray]
+SIMILARITY_FUNCTION_REGISTRY = {}
+
+
+def register_similarity_function(similarity_type: str) -> Callable[[SimilarityFunction], SimilarityFunction]:
+    """Creates a decorator which registers a similarity function in a global dictionary to enable access by name.
+
+    :param similarity_type: The name to use to access the similarity function.
+    :return: A decorator which will add a similarity function to the registry using the specified name.
     """
-    Computes pairwise Tanimoto distances between the molecules in mols_1 and mols_2.
+    def decorator(similarity_function: SimilarityFunction) -> SimilarityFunction:
+        SIMILARITY_FUNCTION_REGISTRY[similarity_type] = similarity_function
+        return similarity_function
+
+    return decorator
+
+
+def get_similarity_function(similarity_type: str) -> SimilarityFunction:
+    """Gets a registered similarity function by name.
+
+    :param similarity_type: The name of the similarity function.
+    :return: The desired similarity function.
+    """
+    if similarity_type not in SIMILARITY_FUNCTION_REGISTRY:
+        raise ValueError(f'Similarity function "{similarity_type}" could not be found.')
+
+    return SIMILARITY_FUNCTION_REGISTRY[similarity_type]
+
+
+@register_similarity_function('tanimoto')
+def compute_pairwise_tanimoto_similarities(mols_1: list[Union[str, Chem.Mol]],
+                                           mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
+    """
+    Computes pairwise Tanimoto similarities between the molecules in mols_1 and mols_2.
 
     :param mols_1: A list of molecules, either SMILES strings or RDKit molecules.
     :param mols_2: A list of molecules, either SMILES strings or RDKit molecules.
                    If None, copies mols_1 list.
-    :return: A 2D numpy array of pairwise distances.
+    :return: A 2D numpy array of pairwise similarities.
     """
     # Compute Morgan fingerprints
     fps_1 = np.array(compute_fingerprints(mols_1, fingerprint_type='morgan'), dtype=bool)
     fps_2 = np.array(compute_fingerprints(mols_2, fingerprint_type='morgan'), dtype=bool) if mols_2 is not None else fps_1
 
-    # Compute pairwise Tanimoto distances
+    # Compute pairwise Tanimoto similarities
     tanimoto_distances = pairwise_distances(fps_1, fps_2, metric='jaccard', n_jobs=-1)
+    tanimoto_similarities = 1 - tanimoto_distances
 
-    return tanimoto_distances
+    return tanimoto_similarities
 
 
 def compute_mcs_size(mols: Iterable[Chem.Mol]) -> int:
@@ -47,6 +78,7 @@ def compute_mcs_size(mols: Iterable[Chem.Mol]) -> int:
     return FindMCS(mols).numAtoms
 
 
+@register_similarity_function('mcs')
 def compute_pairwise_mcs_similarities(mols_1: list[Union[str, Chem.Mol]],
                                       mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
     """
@@ -78,6 +110,7 @@ def compute_pairwise_mcs_similarities(mols_1: list[Union[str, Chem.Mol]],
     return mcs_similarities
 
 
+@register_similarity_function('tversky')
 def compute_pairwise_tversky_similarities(mols_1: list[Union[str, Chem.Mol]],
                                           mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
     """
@@ -128,13 +161,13 @@ def add_nearest_neighbors(data: pd.DataFrame,
     ]
 
 
-def nearest_neighbor_tanimoto(data_path: Path,
-                              reference_data_path: Path,
-                              metrics: Literal['tanimoto', 'mcs', 'tversky'] = 'tanimoto',
-                              save_path: Optional[Path] = None,
-                              smiles_column: str = SMILES_COLUMN,
-                              reference_smiles_column: Optional[str] = None,
-                              reference_name: Optional[str] = None):
+def nearest_neighbor(data_path: Path,
+                     reference_data_path: Path,
+                     metrics: Literal['tanimoto', 'mcs', 'tversky'] = 'tanimoto',
+                     save_path: Optional[Path] = None,
+                     smiles_column: str = SMILES_COLUMN,
+                     reference_smiles_column: Optional[str] = None,
+                     reference_name: Optional[str] = None):
     """Given a dataset, computes the nearest neighbor molecule by Tanimoto similarity in a second dataset.
 
     :param data_path: Path to CSV file containing data with SMILES whose neighbors are to be computed.
@@ -168,23 +201,10 @@ def nearest_neighbor_tanimoto(data_path: Path,
 
     for metric in metrics:
         print(f'Computing similarities using {metric} metric')
-        if metric == 'tanimoto':
-            similarities = 1 - compute_pairwise_tanimoto_distances(
-                mols_1=data[smiles_column],
-                mols_2=reference_data[reference_smiles_column]
-            )
-        elif metric == 'mcs':
-            similarities = compute_pairwise_mcs_similarities(
-                mols_1=data[smiles_column],
-                mols_2=reference_data[reference_smiles_column]
-            )
-        elif metric == 'tversky':
-            similarities = compute_pairwise_tversky_similarities(
-                mols_1=data[smiles_column],
-                mols_2=reference_data[reference_smiles_column]
-            )
-        else:
-            raise ValueError(f'Similarity metric "{metric}" is not supported.')
+        similarities = get_similarity_function(metric)(
+            data[smiles_column],
+            reference_data[reference_smiles_column]
+        )
 
         print('Finding minimum distance SMILES')
         prefix = f'{f"{reference_name}_" if reference_name is not None else ""}{metric}_'
@@ -218,4 +238,4 @@ if __name__ == '__main__':
         """If None, then smiles_column is used."""
         reference_name: Optional[str] = None  # Name of the reference data when naming the new columns with neighbor info.
 
-    nearest_neighbor_tanimoto(**Args().parse_args().as_dict())
+    nearest_neighbor(**Args().parse_args().as_dict())

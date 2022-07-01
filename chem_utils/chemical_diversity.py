@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from chem_utils.constants import SMILES_COLUMN
-from chem_utils.nearest_neighbor import compute_pairwise_tanimoto_distances
+from chem_utils.nearest_neighbor import compute_pairwise_tanimoto_similarities
 
 
 def chemical_diversity(data_path: Path,
@@ -22,7 +22,7 @@ def chemical_diversity(data_path: Path,
     print(f'Number of molecules = {len(data):,}')
 
     # Compute pairwise Tanimoto distances
-    pairwise_tanimoto_distances = compute_pairwise_tanimoto_distances(mols_1=data[smiles_column])
+    pairwise_tanimoto_distances = compute_pairwise_tanimoto_similarities(mols_1=data[smiles_column])
 
     # Compute average Tanimoto distance between pairs
     unique_distances_mask = np.triu(np.ones(pairwise_tanimoto_distances.shape), k=1).astype(bool)

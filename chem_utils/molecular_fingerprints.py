@@ -9,8 +9,9 @@ from rdkit.DataStructs import ConvertToNumpyArray
 from rdkit.Chem import AllChem
 from tqdm import tqdm
 
+from chem_utils.constants import Molecule
 
-Molecule = Union[str, Chem.Mol]
+
 FingerprintGenerator = Callable[[Molecule], np.ndarray]
 FINGERPRINT_GENERATOR_REGISTRY = {}
 MORGAN_RADIUS = 2
