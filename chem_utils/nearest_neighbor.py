@@ -14,7 +14,7 @@ from sklearn.metrics import pairwise_distances
 from tqdm import tqdm
 
 from chem_utils.constants import SMILES_COLUMN
-from chem_utils.morgan_fingerprint import compute_morgan_fingerprints
+from chem_utils.morgan_fingerprint import compute_fingerprints
 
 
 def compute_pairwise_tanimoto_distances(mols_1: list[Union[str, Chem.Mol]],
@@ -28,8 +28,8 @@ def compute_pairwise_tanimoto_distances(mols_1: list[Union[str, Chem.Mol]],
     :return: A 2D numpy array of pairwise distances.
     """
     # Compute Morgan fingerprints
-    fps_1 = np.array(compute_morgan_fingerprints(mols_1), dtype=bool)
-    fps_2 = np.array(compute_morgan_fingerprints(mols_2), dtype=bool) if mols_2 is not None else fps_1
+    fps_1 = np.array(compute_fingerprints(mols_1, fingerprint_type='morgan'), dtype=bool)
+    fps_2 = np.array(compute_fingerprints(mols_2, fingerprint_type='morgan'), dtype=bool) if mols_2 is not None else fps_1
 
     # Compute pairwise Tanimoto distances
     tanimoto_distances = pairwise_distances(fps_1, fps_2, metric='jaccard', n_jobs=-1)
@@ -92,8 +92,8 @@ def compute_pairwise_tversky_similarities(mols_1: list[Union[str, Chem.Mol]],
     :return: A 2D numpy array of pairwise similarities.
     """
     # Compute Morgan fingerprints
-    fps_1 = np.array(compute_morgan_fingerprints(mols_1), dtype=int)
-    fps_2 = np.array(compute_morgan_fingerprints(mols_2), dtype=int) if mols_2 is not None else fps_1
+    fps_1 = np.array(compute_fingerprints(mols_1, fingerprint_type='morgan'), dtype=int)
+    fps_2 = np.array(compute_fingerprints(mols_2, fingerprint_type='morgan'), dtype=int) if mols_2 is not None else fps_1
 
     # Compute pairwise Tversky similarities
     intersection = fps_1 @ fps_2.transpose()

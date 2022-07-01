@@ -8,7 +8,7 @@ patch_sklearn()
 from sklearn.cluster import KMeans, MiniBatchKMeans
 
 from chem_utils.constants import CLUSTER_COLUMN, SMILES_COLUMN
-from chem_utils.morgan_fingerprint import compute_morgan_fingerprints
+from chem_utils.morgan_fingerprint import compute_fingerprints
 
 
 def cluster_molecules(data_path: Path,
@@ -33,7 +33,7 @@ def cluster_molecules(data_path: Path,
     print(f'Data size = {len(data):,}')
 
     print('Computing Morgan fingerprints')
-    morgans = compute_morgan_fingerprints(data[smiles_column])
+    morgans = compute_fingerprints(data[smiles_column], fingerprint_type='morgan')
 
     print('Clustering')
     if mini_batch:

@@ -16,4 +16,5 @@ dependencies:
   - tqdm
   - umap-learn
   - pip:
-      - typed-argument-parser
+    - typed-argument-parser
+    - git+https://github.com/bp-kelley/descriptastorus

@@ -13,7 +13,7 @@ from tqdm import tqdm
 from umap import UMAP
 
 from chem_utils.constants import SMILES_COLUMN
-from chem_utils.morgan_fingerprint import compute_morgan_fingerprints
+from chem_utils.morgan_fingerprint import compute_fingerprints
 
 
 def dimensionality_reduction(data_paths: list[Path],
@@ -102,7 +102,7 @@ def dimensionality_reduction(data_paths: list[Path],
 
     # Get/compute molecule embeddings
     if embedder == 'morgan':
-        embeddings = compute_morgan_fingerprints(smiles)
+        embeddings = compute_fingerprints(smiles, fingerprint_type='morgan')
     elif embedder == 'file':
         embeddings = np.concatenate(embeddings)
     else:
