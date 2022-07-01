@@ -37,6 +37,8 @@ pip install -e .
 
 - [`molecular_fingerprints.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_fingerprints.py): Contains functions to compute fingerprints for molecules. Parallelized for speed.
 
+- [`molecular_similarities.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_similarities.py): Contains functions to compute similarities between molecules. Parallelized for speed.
+
 - [`nearest_neighbor.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/nearest_neighbor.py): Given a dataset of molecules, computes the nearest neighbor molecule in a second dataset using one of several similarity metrics.
 
 - [`regression_to_classification.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/regression_to_classification.py): Converts regression data to classification data using given thresholds.
