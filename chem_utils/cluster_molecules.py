@@ -8,7 +8,7 @@ patch_sklearn()
 from sklearn.cluster import KMeans, MiniBatchKMeans
 
 from chem_utils.constants import CLUSTER_COLUMN, SMILES_COLUMN
-from chem_utils.morgan_fingerprint import compute_fingerprints
+from chem_utils.molecular_similarities import compute_fingerprints
 
 
 def cluster_molecules(data_path: Path,
