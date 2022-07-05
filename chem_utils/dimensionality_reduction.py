@@ -13,7 +13,7 @@ from tqdm import tqdm
 from umap import UMAP
 
 from chem_utils.constants import SMILES_COLUMN
-from chem_utils.morgan_fingerprint import compute_fingerprints
+from chem_utils.molecular_fingerprints import compute_fingerprints
 
 
 def dimensionality_reduction(data_paths: list[Path],
