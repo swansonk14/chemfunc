@@ -6,8 +6,6 @@ from typing import Literal, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearnex import patch_sklearn
-patch_sklearn()
 from sklearn.manifold import TSNE
 from tqdm import tqdm
 from umap import UMAP

@@ -3,8 +3,6 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-from sklearnex import patch_sklearn
-patch_sklearn()
 from sklearn.cluster import KMeans, MiniBatchKMeans
 
 from chem_utils.constants import CLUSTER_COLUMN, SMILES_COLUMN

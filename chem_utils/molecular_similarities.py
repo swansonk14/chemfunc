@@ -6,8 +6,6 @@ from typing import Callable, Iterable, Optional, Union
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem.rdFMCS import FindMCS
-from sklearnex import patch_sklearn
-patch_sklearn()
 from sklearn.metrics import pairwise_distances
 from tqdm import tqdm
 

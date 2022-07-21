@@ -12,7 +12,6 @@ dependencies:
   - pip
   - rdkit
   - scikit-learn
-  - scikit-learn-intelex
   - tqdm
   - umap-learn
   - pip:

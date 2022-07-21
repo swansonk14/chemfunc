@@ -27,7 +27,6 @@ setup(
         'numpy',
         'pandas',
         'scikit-learn',
-        'scikit-learn-intelex',
         'tqdm',
         'typed-argument-parser',
         'umap-learn'
