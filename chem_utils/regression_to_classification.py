@@ -34,7 +34,7 @@ def regression_to_classification(data_path: Path,
     print(data[classification_column].value_counts())
 
     # Save classification data
-    save_path.mkdir(parents=True, exist_ok=True)
+    save_path.parent.mkdir(parents=True, exist_ok=True)
     data.to_csv(save_path, index=False)
 
 
