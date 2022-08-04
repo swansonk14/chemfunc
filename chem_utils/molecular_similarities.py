@@ -152,7 +152,7 @@ def compute_top_similarities(similarity_type: str,
                   If top_k is an int, then the similarity of the top_k most similar molecule is returned
                   (e.g., top_k = 1 means the similarity of the most similar molecule.)
                   If top_k is a float, then the similarity of the top_k-th percentile most similar molecule is returned
-                  (e.g., top_k = 0.95 returns the similarity of the 95% percentile most similar molecule).
+                  (e.g., top_k = 95.0 returns the similarity of the 95% percentile most similar molecule).
     :return: The maximum similarity between each molecule and every other molecule (either in mols or reference_mols).
     """
     # Compute pairwise similarities
@@ -168,8 +168,8 @@ def compute_top_similarities(similarity_type: str,
             similarities = np.max(pairwise_similarities, axis=1)
         elif 1 <= top_k <= len(reference_mols):
             argsort = np.argsort(pairwise_similarities)
-            top_k_mask = argsort == (len(reference_mols) - top_k)  # argsort starts as 0 and ascends, opposite of top_k
-            similarities = pairwise_similarities[top_k_mask]
+            top_k_indices = argsort[:, -top_k]
+            similarities = pairwise_similarities[top_k_indices]
         else:
             raise ValueError(f'top_k must be between 1 and {len(reference_mols)} '
                              f'(length of reference_mols) but got {top_k}')
