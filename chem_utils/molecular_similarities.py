@@ -169,7 +169,7 @@ def compute_top_similarities(similarity_type: str,
         elif 1 <= top_k <= len(reference_mols):
             argsort = np.argsort(pairwise_similarities)
             top_k_indices = argsort[:, -top_k]
-            similarities = pairwise_similarities[top_k_indices]
+            similarities = pairwise_similarities[np.arange(len(pairwise_similarities)), top_k_indices]
         else:
             raise ValueError(f'top_k must be between 1 and {len(reference_mols)} '
                              f'(length of reference_mols) but got {top_k}')
