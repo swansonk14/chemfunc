@@ -26,6 +26,7 @@ def canonicalize_smiles(data_path: Path,
     """
     # Load data
     data = pd.read_csv(data_path)
+    print(f'Data size = {len(data):,}')
 
     # Convert SMILES to mol
     mols = [Chem.MolFromSmiles(smiles) for smiles in tqdm(data[smiles_column], desc='SMILES to mol')]
@@ -53,6 +54,7 @@ def canonicalize_smiles(data_path: Path,
         if not all(connected_mols):
             print(f'Found {len(connected_mols) - sum(connected_mols)} disconnected molecules. Deleting.')
             data = data[connected_mols]
+            print(f'Remaining data size = {len(data):,}')
 
     # Save data
     save_path.parent.mkdir(parents=True, exist_ok=True)
