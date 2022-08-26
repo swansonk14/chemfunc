@@ -63,7 +63,7 @@ def filter_molecules(data_path: Path,
                 raise ValueError(f'Top proportion must be between 0.0 and 1.0 but got {top_proportion}.')
 
             num_top = round(len(data) * top_proportion)
-            top_indices = set(argsort[:num_top])
+            top_indices = set(argsort[-num_top:])
             print(f'Keeping top {len(top_indices):,} molecules.')
         else:
             top_indices = set()
@@ -77,8 +77,8 @@ def filter_molecules(data_path: Path,
                 print(f'Number of molecules in both bottom and top sets = {num_in_bottom_and_top:,}')
 
         # Combine bottom and top molecules and select molecules
-        keep_indices = bottom_indices | top_indices
-        data = data[keep_indices]
+        keep_indices = sorted(bottom_indices | top_indices)
+        data = data.iloc[keep_indices]
         print(f'Data size after selecting bottom and/or top molecules = {len(data):,}')
 
     # Save data
