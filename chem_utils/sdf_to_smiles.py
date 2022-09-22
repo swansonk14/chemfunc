@@ -11,16 +11,18 @@ from chem_utils.constants import SMILES_COLUMN
 
 def sdf_to_smiles(data_path: Path,
                   save_path: Path,
-                  properties: Optional[set[str]] = None) -> None:
+                  properties: Optional[list[str]] = None,
+                  deduplicate: bool = False) -> None:
     """Converts molecules in SDF format to a CSV with SMILES.
 
     :param data_path: Path to an SDF file.
-    :param properties: Set of properties to extract from the SDF for each molecule.
+    :param properties: List of properties to extract from the SDF for each molecule.
     :param save_path: Path to a CSV file where SMILES strings will be saved.
+    :param deduplicate: Whether to deduplicate SMILES.
     """
     # Default to empty set for properties
     if properties is None:
-        properties = set()
+        properties = []
 
     # Load SDF file
     num_skipped = 0
@@ -47,6 +49,11 @@ def sdf_to_smiles(data_path: Path,
         } for mol in tqdm(mols, desc='Mol to SMILES')
     ])
 
+    # Optionally deduplicate
+    if deduplicate:
+        print('Deduplicating SMILES')
+        data.drop_duplicates(subset=SMILES_COLUMN, inplace=True)
+
     # Print stats
     print(f'Data size = {len(data):,}')
     print(f'Number of unique smiles = {data[SMILES_COLUMN].nunique():,}')
@@ -65,6 +72,7 @@ if __name__ == '__main__':
     class Args(Tap):
         data_path: Path  # Path to an SDF file.
         save_path: Path  # Path to a CSV file where SMILES strings will be saved.
-        properties: Optional[set[str]] = None  # Set of properties to extract from the SDF for each molecule.
+        properties: Optional[list[str]] = None  # List of properties to extract from the SDF for each molecule.
+        deduplicate: bool = False  # Whether to deduplicate SMILES.
 
     sdf_to_smiles(**Args().parse_args().as_dict())
