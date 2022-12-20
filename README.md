@@ -33,13 +33,13 @@ pip install -e .
 
 - [`measure_experimental_reproducibility.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/measure_experimental_reproducibility.py): Measures the experimental reproducibility of two biological replicates by using one replicate to predict the other.
 
-- [`molecular_weight_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_weight_distribution.py): Plots the distribution of molecular weights of a set of molecules.
-
 - [`molecular_fingerprints.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_fingerprints.py): Contains functions to compute fingerprints for molecules. Parallelized for speed.
 
 - [`molecular_similarities.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_similarities.py): Contains functions to compute similarities between molecules. Parallelized for speed.
 
 - [`nearest_neighbor.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/nearest_neighbor.py): Given a dataset of molecules, computes the nearest neighbor molecule in a second dataset using one of several similarity metrics.
+
+- [`property_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_weight_distribution.py): Plots the distribution of molecular properties (e.g., molecular weight or logP) of a set of molecules.
 
 - [`regression_to_classification.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/regression_to_classification.py): Converts regression data to classification data using given thresholds.
 
