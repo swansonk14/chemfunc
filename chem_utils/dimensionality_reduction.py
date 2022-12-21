@@ -20,9 +20,11 @@ def dimensionality_reduction(data_paths: list[Path],
                              metric: Literal['jaccard', 'euclidean'] = 'jaccard',
                              embedder: Literal['morgan', 'file'] = 'morgan',
                              max_molecules: Optional[list[int]] = None,
+                             colors: Optional[list[str]] = None,
                              smiles_columns: Optional[list[Path]] = None,
                              data_names: Optional[list[str]] = None,
-                             highlight_data_names: Optional[set[str]] = None) -> None:
+                             highlight_data_names: Optional[set[str]] = None,
+                             display_data_names: Optional[set[str]] = None) -> None:
     """Runs dimensionality reduction (t-SNE or UMAP) on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.
@@ -34,10 +36,12 @@ def dimensionality_reduction(data_paths: list[Path],
                      file: Uses all columns except the SMILES column from the data file as the embedding.
     :param max_molecules: Maximum number of molecules sampled in each dataset.
                           If just one is provided, it is applied to all files.
+    :param colors: The colors to use for each dataset. If None, uses tab10 or tab20 depending on the number of datasets.
     :param smiles_columns: Name of the columns containing SMILES. If just one is provided, it is applied to all files.
                            Defaults to 'smiles'.
     :param data_names: Names of the data files for labeling the plot.
     :param highlight_data_names: Names of the data files to highlight in the plot.
+    :param display_data_names: The names of the data files to display in the plot. If None, all are displayed.
     """
     # Validate max_molecules
     if max_molecules is None:
@@ -46,6 +50,10 @@ def dimensionality_reduction(data_paths: list[Path],
         max_molecules = max_molecules * len(data_paths)
     elif len(max_molecules) != len(data_paths):
         raise ValueError('Number of max_molecules does not match number of data paths.')
+
+    # Validate colors
+    if colors is not None and len(colors) != len(data_paths):
+        raise ValueError('Number of colors does not match number of data paths.')
 
     # Validate smiles_columns
     if smiles_columns is None:
@@ -66,12 +74,15 @@ def dimensionality_reduction(data_paths: list[Path],
         highlight_data_names = set()
 
     # Set colors
-    if len(data_paths) <= 10:
-        cmap = plt.get_cmap('tab10')
-    elif len(data_paths) <= 20:
-        cmap = plt.get_cmap('tab20')
-    else:
-        raise ValueError('Not enough colors for more than 20 data paths.')
+    if colors is None:
+        if len(data_paths) <= 10:
+            cmap = plt.get_cmap('tab10')
+        elif len(data_paths) <= 20:
+            cmap = plt.get_cmap('tab20')
+        else:
+            raise ValueError('Not enough colors for more than 20 data paths.')
+
+        colors = [cmap(i) for i in range(len(data_paths))]
 
     # Load data and subsample SMILES
     smiles, slices, embeddings = [], [], []
@@ -128,14 +139,15 @@ def dimensionality_reduction(data_paths: list[Path],
     plt.title(f'{method} using Morgan fingerprint with {metric.title()} similarity', fontsize=100)
 
     for index, (slc, data_name) in enumerate(zip(slices, data_names)):
-        plt.scatter(
-            X[slc, 0],
-            X[slc, 1],
-            s=1500 if data_name in highlight_data_names else 1000,
-            color=cmap(index),
-            label=data_name,
-            marker='*' if data_name in highlight_data_names else '.'
-        )
+        if display_data_names is None or data_name in display_data_names:
+            plt.scatter(
+                X[slc, 0],
+                X[slc, 1],
+                s=1500 if data_name in highlight_data_names else 1000,
+                color=colors[index],
+                label=data_name,
+                marker='*' if data_name in highlight_data_names else '.'
+            )
 
     plt.legend(fontsize=50)
     plt.xticks([]), plt.yticks([])
@@ -150,19 +162,32 @@ if __name__ == '__main__':
     from tap import Tap
 
     class Args(Tap):
-        data_paths: list[Path]  # Path to CSV files containing SMILES.
-        save_path: Path  # Path to a PDF file where the dimensionality reduction plot will be saved.
-        method: Literal['t-SNE', 'UMAP'] = 't-SNE'  # Dimensionality reduction method.
-        metric: Literal['jaccard', 'euclidean'] = 'jaccard'  # Metric to use to compared embeddings.
-        embedder: Literal['morgan', 'file'] = 'morgan'  # Embedding to use for the molecules.
+        data_paths: list[Path]
+        """Path to CSV files containing SMILES."""
+        save_path: Path
+        """Path to a PDF file where the dimensionality reduction plot will be saved."""
+        method: Literal['t-SNE', 'UMAP'] = 't-SNE'
+        """Dimensionality reduction method."""
+        metric: Literal['jaccard', 'euclidean'] = 'jaccard'
+        """Metric to use to compared embeddings."""
+        embedder: Literal['morgan', 'file'] = 'morgan'
+        """Embedding to use for the molecules."""
         """
         morgan: Computes Morgan fingerprint from the SMILES.
         file: Uses all columns except the SMILES column from the data file as the embedding.
         """
-        max_molecules: Optional[list[int]] = None  # Maximum number of molecules sampled in each dataset.
-        smiles_columns: Optional[list[str]] = None  # Name of the columns in the smiles_paths files containing SMILES.
+        max_molecules: Optional[list[int]] = None
+        """Maximum number of molecules sampled in each dataset."""
+        colors: Optional[list[str]] = None
+        """The colors to use for each dataset. If None, uses tab10 or tab20 depending on the number of datasets."""
+        smiles_columns: Optional[list[str]] = None
+        """Name of the columns in the smiles_paths files containing SMILES."""
         """If just one SMILES column is provided, it is applied to all files. Defaults to 'smiles'."""
-        data_names: Optional[list[str]] = None  # Names of the data files for labeling the plot.
-        highlight_data_names: Optional[set[str]] = None  # Names of the data files to highlight in the plot.
+        data_names: Optional[list[str]] = None
+        """Names of the data files for labeling the plot."""
+        highlight_data_names: Optional[set[str]] = None
+        """Names of the data files to highlight in the plot."""
+        display_data_names: Optional[set[str]] = None
+        """The names of the data files to display in the plot. If None, all are displayed."""
 
     dimensionality_reduction(**Args().parse_args().as_dict())
