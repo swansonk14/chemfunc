@@ -14,8 +14,8 @@ from chem_utils.constants import SMILES_COLUMN
 def visualize_molecules(data_path: Path,
                         save_dir: Path,
                         smiles_column: str = SMILES_COLUMN,
-                        num_rows: int = 4,
-                        mols_per_row: int = 8,
+                        num_rows: int = 5,
+                        mols_per_row: int = 10,
                         num_molecules: Optional[int] = None,
                         image_format: Literal['PNG', 'SVG'] = 'PNG') -> None:
     """Converts molecule SMILES to grids of images.
@@ -73,8 +73,8 @@ if __name__ == '__main__':
         data_path: Path  # Path to CSV file containing SMILES.
         save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
         smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-        num_rows: int = 4  # Number of rows of molecules/rationales per image.
-        mols_per_row: int = 8  # Number of molecules/rationales per row.
+        num_rows: int = 5  # Number of rows of molecules/rationales per image.
+        mols_per_row: int = 10  # Number of molecules/rationales per row.
         num_molecules: Optional[int] = None  # Number of molecules to visualize (if None, visualizes all molecules).
         image_format: Literal['PNG', 'SVG'] = 'PNG'  # Image format to use when saving images.
 
