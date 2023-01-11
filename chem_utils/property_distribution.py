@@ -93,11 +93,11 @@ def property_distribution(data_paths: list[Path],
     # Save data
     if save_data:
         max_len = max(len(values) for values in prop_data.values())
-        coordinates = pd.DataFrame({
+        fig_data = pd.DataFrame({
             key: np.pad(values, (0, max_len - len(values)), constant_values=np.nan)
             for key, values in prop_data.items()
         })
-        coordinates.to_csv(save_dir / f'{prop}.csv', index=False)
+        fig_data.to_csv(save_dir / f'{prop}.csv', index=False)
 
 
 if __name__ == '__main__':
