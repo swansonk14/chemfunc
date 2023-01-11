@@ -43,8 +43,7 @@ def property_distribution(data_paths: list[Path],
                           prop: Literal['mol_weight', 'logp'],
                           smiles_column: str = SMILES_COLUMN,
                           min_value: float = -float('inf'),
-                          max_value: float = float('inf'),
-                          save_data: bool = False) -> None:
+                          max_value: float = float('inf')) -> None:
     """Computes the distribution of property values over a set of molecules.
 
     :param data_paths: Path to CSV files containing SMILES.
@@ -53,7 +52,6 @@ def property_distribution(data_paths: list[Path],
     :param smiles_column: The name of the column in data_path containing SMILES.
     :param min_value: Minimum property value to plot (removes outliers).
     :param max_value: Maximum property value to plot (removes outliers).
-    :param save_data: Whether to save the property data as a CSV alongside the plot.
     """
     # Select property function
     if prop == 'mol_weight':
@@ -91,13 +89,12 @@ def property_distribution(data_paths: list[Path],
     plt.savefig(save_dir / f'{prop}.pdf', bbox_inches='tight')
 
     # Save data
-    if save_data:
-        max_len = max(len(values) for values in prop_data.values())
-        fig_data = pd.DataFrame({
-            key: np.pad(values, (0, max_len - len(values)), constant_values=np.nan)
-            for key, values in prop_data.items()
-        })
-        fig_data.to_csv(save_dir / f'{prop}.csv', index=False)
+    max_len = max(len(values) for values in prop_data.values())
+    fig_data = pd.DataFrame({
+        key: np.pad(values, (0, max_len - len(values)), constant_values=np.nan)
+        for key, values in prop_data.items()
+    })
+    fig_data.to_csv(save_dir / f'{prop}.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -110,6 +107,5 @@ if __name__ == '__main__':
         smiles_column: str = SMILES_COLUMN  # The name of the column in data_paths containing SMILES.
         min_value: float = -float('inf')  # Minimum property value to plot (removes outliers).
         max_value: float = float('inf')  # Maximum property value to plot (removes outliers).
-        save_data: bool = False  # Whether to save the property data as a CSV alongside the plot.
 
     property_distribution(**Args().parse_args().as_dict())

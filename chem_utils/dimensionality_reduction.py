@@ -15,7 +15,7 @@ from chem_utils.molecular_fingerprints import compute_fingerprints
 
 
 def dimensionality_reduction(data_paths: list[Path],
-                             save_path: Path,
+                             save_dir: Path,
                              method: Literal['t-SNE', 'UMAP'] = 't-SNE',
                              metric: Literal['jaccard', 'euclidean'] = 'jaccard',
                              embedder: Literal['morgan', 'file'] = 'morgan',
@@ -28,7 +28,7 @@ def dimensionality_reduction(data_paths: list[Path],
     """Runs dimensionality reduction (t-SNE or UMAP) on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.
-    :param save_path: Path to a PDF file where the dimensionality reduction plot will be saved.
+    :param save_dir: Path to a directory where the dimensionality reduction plot will be saved.
     :param method: Dimensionality reduction method.
     :param metric: Metric to use to compared embeddings.
     :param embedder: Embedding to use for the molecules.
@@ -109,6 +109,25 @@ def dimensionality_reduction(data_paths: list[Path],
             embedding_columns.remove(smiles_column)
             embeddings.append(data[embedding_columns].to_numpy())
 
+    # # TODO: remove this
+    # # Temporary hack to show molecule filtering
+    # smiles_sets = [set(smiles[s]) for s in slices]
+    # np.random.seed(0)
+    # for i in range(4):
+    #     if len(smiles_sets[i]) > 2000:
+    #         smiles_sets[i] = {str(s) for s in np.random.choice(sorted(smiles_sets[i]), size=2000, replace=False)}
+    # generated_set = smiles_sets[3]
+    # final_set = smiles_sets[-1]
+    #
+    # smiles_sets = smiles_sets[:3] + [(smiles_set & generated_set) | final_set for smiles_set in smiles_sets[3:]]
+    #
+    # smiles, slices = [], []
+    # for smiles_set in smiles_sets:
+    #     smiles += sorted(smiles_set)
+    #     slices.append(slice(len(smiles) - len(smiles_set), len(smiles)))
+    #
+    # print(f'Final dataset size: {len(smiles):,}')
+
     # Get/compute molecule embeddings
     if embedder == 'morgan':
         embeddings = compute_fingerprints(smiles, fingerprint_type='morgan')
@@ -138,6 +157,7 @@ def dimensionality_reduction(data_paths: list[Path],
     plt.figure(figsize=(64, 48))
     plt.title(f'{method} using Morgan fingerprint with {metric.title()} similarity', fontsize=100)
 
+    tsne_data = {}
     for index, (slc, data_name) in enumerate(zip(slices, data_names)):
         if display_data_names is None or data_name in display_data_names:
             plt.scatter(
@@ -149,13 +169,24 @@ def dimensionality_reduction(data_paths: list[Path],
                 marker='*' if data_name in highlight_data_names else '.'
             )
 
+            tsne_data[f'{data_name}_x'] = X[slc, 0]
+            tsne_data[f'{data_name}_y'] = X[slc, 1]
+
     plt.legend(fontsize=50)
     plt.xticks([]), plt.yticks([])
     plt.tight_layout()
 
     print('Saving plot')
-    save_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(save_path)
+    save_dir.mkdir(parents=True, exist_ok=True)
+    plt.savefig(save_dir / f'{method}_{metric}.pdf', bbox_inches='tight')
+
+    print('Saving data')
+    max_len = max(len(values) for values in tsne_data.values())
+    fig_data = pd.DataFrame({
+        key: np.pad(values, (0, max_len - len(values)), constant_values=np.nan)
+        for key, values in tsne_data.items()
+    })
+    fig_data.to_csv(save_dir / f'{method}_{metric}.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -164,8 +195,8 @@ if __name__ == '__main__':
     class Args(Tap):
         data_paths: list[Path]
         """Path to CSV files containing SMILES."""
-        save_path: Path
-        """Path to a PDF file where the dimensionality reduction plot will be saved."""
+        save_dir: Path
+        """Path to a directory where the dimensionality reduction plot will be saved."""
         method: Literal['t-SNE', 'UMAP'] = 't-SNE'
         """Dimensionality reduction method."""
         metric: Literal['jaccard', 'euclidean'] = 'jaccard'
