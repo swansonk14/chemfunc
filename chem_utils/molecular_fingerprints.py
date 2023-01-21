@@ -1,6 +1,6 @@
 """Functions to compute fingerprints for molecules."""
 from multiprocessing import Pool
-from typing import Callable, Union
+from typing import Callable
 
 import numpy as np
 from descriptastorus.descriptors import rdNormalizedDescriptors
@@ -45,12 +45,12 @@ def get_fingerprint_generator(fingerprint_type: str) -> FingerprintGenerator:
 
 def get_available_fingerprint_generators() -> list[str]:
     """Returns a list of names of available fingerprint generators."""
-    return list(FINGERPRINT_GENERATOR_REGISTRY.keys())
+    return sorted(FINGERPRINT_GENERATOR_REGISTRY)
 
 
 # TODO: load all of this from chem_utils instead
 @register_fingerprint_generator('morgan')
-def compute_morgan_fingerprint(mol: Union[str, Chem.Mol],
+def compute_morgan_fingerprint(mol: Molecule,
                                radius: int = MORGAN_RADIUS,
                                num_bits: int = MORGAN_NUM_BITS) -> np.ndarray:
     """Generates a binary Morgan fingerprint for a molecule.

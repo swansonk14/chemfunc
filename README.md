@@ -27,6 +27,8 @@ pip install -e .
 
 - [`cluster_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/cluster_molecules.py): Performs k-means clustering to cluster molecules based on Morgan fingerprints.
 
+- [`compute_property_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/plot_property_distribution.py): Computes one or more molecular properties for a set of molecules.
+
 - [`dimensionality_reduction.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/dimensionality_reduction.py): Visualizes molecules in 2D by performing dimensionality reduction (t-SNE or UMAP) on Morgan fingerprints.
 
 - [`filter_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/filter_molecules.py): Filters molecules to those with values in a certain range.
@@ -35,11 +37,13 @@ pip install -e .
 
 - [`molecular_fingerprints.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_fingerprints.py): Contains functions to compute fingerprints for molecules. Parallelized for speed.
 
+- [`molecular_properties.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_properties.py): Contains functions to compute molecular properties. Parallelized for speed.
+
 - [`molecular_similarities.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_similarities.py): Contains functions to compute similarities between molecules. Parallelized for speed.
 
 - [`nearest_neighbor.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/nearest_neighbor.py): Given a dataset of molecules, computes the nearest neighbor molecule in a second dataset using one of several similarity metrics.
 
-- [`property_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/molecular_weight_distribution.py): Plots the distribution of molecular properties (e.g., molecular weight or logP) of a set of molecules.
+- [`plot_property_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/plot_property_distribution.py): Plots the distribution of molecular properties of a set of molecules.
 
 - [`regression_to_classification.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/regression_to_classification.py): Converts regression data to classification data using given thresholds.
 

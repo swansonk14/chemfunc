@@ -1,7 +1,7 @@
 """Functions to compute the similarities between molecules."""
 from itertools import product
 from multiprocessing import Pool
-from typing import Callable, Iterable, Optional, Union
+from typing import Callable, Iterable, Optional
 
 import numpy as np
 from rdkit import Chem
@@ -41,9 +41,14 @@ def get_similarity_function(similarity_type: str) -> SimilarityFunction:
     return SIMILARITY_FUNCTION_REGISTRY[similarity_type]
 
 
+def get_available_similarity_functions() -> list[str]:
+    """Returns a list of names of available similarity functions."""
+    return sorted(SIMILARITY_FUNCTION_REGISTRY)
+
+
 @register_similarity_function('tanimoto')
-def compute_pairwise_tanimoto_similarities(mols_1: list[Union[str, Chem.Mol]],
-                                           mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
+def compute_pairwise_tanimoto_similarities(mols_1: list[Molecule],
+                                           mols_2: Optional[list[Molecule]] = None) -> np.ndarray:
     """
     Computes pairwise Tanimoto similarities between the molecules in mols_1 and mols_2.
 
@@ -74,8 +79,8 @@ def compute_mcs_size(mols: Iterable[Chem.Mol]) -> int:
 
 
 @register_similarity_function('mcs')
-def compute_pairwise_mcs_similarities(mols_1: list[Union[str, Chem.Mol]],
-                                      mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
+def compute_pairwise_mcs_similarities(mols_1: list[Molecule],
+                                      mols_2: Optional[list[Molecule]] = None) -> np.ndarray:
     """
     Computes pairwise maximum common substructure (MCS) similarities between the molecules in mols_1 and mols_2.
 
@@ -106,8 +111,8 @@ def compute_pairwise_mcs_similarities(mols_1: list[Union[str, Chem.Mol]],
 
 
 @register_similarity_function('tversky')
-def compute_pairwise_tversky_similarities(mols_1: list[Union[str, Chem.Mol]],
-                                          mols_2: Optional[list[Union[str, Chem.Mol]]] = None) -> np.ndarray:
+def compute_pairwise_tversky_similarities(mols_1: list[Molecule],
+                                          mols_2: Optional[list[Molecule]] = None) -> np.ndarray:
     """
     Computes pairwise Tversky similarities between the molecules in mols_1 and mols_2.
 
@@ -132,9 +137,9 @@ def compute_pairwise_tversky_similarities(mols_1: list[Union[str, Chem.Mol]],
 
 
 def compute_top_similarities(similarity_type: str,
-                             mols: list[Union[str, Chem.Mol]],
-                             reference_mols: Optional[list[Union[str, Chem.Mol]]] = None,
-                             top_k: Union[int, float] = 1) -> np.ndarray:
+                             mols: list[Molecule],
+                             reference_mols: Optional[list[Molecule]] = None,
+                             top_k: int | float = 1) -> np.ndarray:
     """For each molecule in a list, computes the similarity of the top k most similar molecule in a reference set.
 
     If top_k == 1, this computes the nearest neighbor similarity.
