@@ -38,9 +38,9 @@ def plot_property_distribution(data_paths: list[Path],
         prop_data[data_path.stem] = data[property_column]
 
     # Label plot
-    plt.xlabel(property_column.title())
+    plt.xlabel(property_column)
     plt.ylabel('Density')
-    plt.title(f'{property_column.title()} Distribution')
+    plt.title(f'{property_column} Distribution')
     plt.legend()
 
     # Save plot
@@ -63,7 +63,6 @@ if __name__ == '__main__':
         data_paths: list[Path]  # Path to CSV files containing SMILES.
         property_column: str  # Name of the column containing the property values.
         save_dir: Path  # Path to a directory where the plot and (optionally) data will be saved.
-        smiles_column: str = SMILES_COLUMN  # The name of the column in data_paths containing SMILES.
         min_value: float = -float('inf')  # Minimum property value to plot (removes outliers).
         max_value: float = float('inf')  # Maximum property value to plot (removes outliers).
 
