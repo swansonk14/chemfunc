@@ -8,6 +8,7 @@ from rdkit import Chem
 from rdkit.Chem import RDConfig
 from rdkit.Chem.Crippen import MolLogP
 from rdkit.Chem.Descriptors import MolWt
+from rdkit.Chem.QED import qed
 
 sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
 
@@ -82,6 +83,17 @@ def compute_molecular_weight(molecule: Molecule) -> float:
     :return: The molecular weight of the molecule.
     """
     return MolWt(molecule)
+
+
+@register_property_function('qed')
+@smiles_to_mol_wrapper
+def compute_qed(molecule: Molecule) -> float:
+    """Computes the QED (quantitative estimate of drug-likeness) score of a molecule.
+
+    :param molecule: A molecule, either a SMILES string or an RDKit molecule.
+    :return: The QED score of the molecule.
+    """
+    return qed(molecule)
 
 
 @register_property_function('sa_score')
