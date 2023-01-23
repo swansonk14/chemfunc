@@ -51,6 +51,8 @@ pip install -e .
 
 - [`sdf_to_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/sdf_to_smiles.py): Converts an SDF file to a CSV file with SMILES.
 
+- [`smiles_to_svg.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/smiles_to-svg.py): Converts a SMILES string to an SVG image of the molecule.
+
 - [`select_from_clusters.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/select_from_clusters.py): Selects the best molecule from each cluster.
 
 - [`visualize_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/visualize_molecules.py): Converts a file of SMILES to images of molecular structures.
