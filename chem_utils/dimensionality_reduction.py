@@ -1,4 +1,4 @@
-"""Runs dimensionality reduction (t-SNE or UMAP) on molecular fingerprints from one or more chemical libraries."""
+"""Runs dimensionality reduction (t-SNE) on molecular fingerprints from one or more chemical libraries."""
 import time
 from pathlib import Path
 from typing import Literal, Optional
@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 from sklearn.manifold import TSNE
 from tqdm import tqdm
-from umap import UMAP
 
 from chem_utils.constants import SMILES_COLUMN
 from chem_utils.molecular_fingerprints import compute_fingerprints
@@ -16,7 +15,7 @@ from chem_utils.molecular_fingerprints import compute_fingerprints
 
 def dimensionality_reduction(data_paths: list[Path],
                              save_dir: Path,
-                             method: Literal['t-SNE', 'UMAP'] = 't-SNE',
+                             method: Literal['t-SNE'] = 't-SNE',
                              metric: Literal['jaccard', 'euclidean'] = 'jaccard',
                              embedder: Literal['morgan', 'file'] = 'morgan',
                              max_molecules: Optional[list[int]] = None,
@@ -25,7 +24,7 @@ def dimensionality_reduction(data_paths: list[Path],
                              data_names: Optional[list[str]] = None,
                              highlight_data_names: Optional[set[str]] = None,
                              display_data_names: Optional[set[str]] = None) -> None:
-    """Runs dimensionality reduction (t-SNE or UMAP) on molecular fingerprints from one or more chemical libraries.
+    """Runs dimensionality reduction (t-SNE) on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.
     :param save_dir: Path to a directory where the dimensionality reduction plot will be saved.
@@ -139,8 +138,6 @@ def dimensionality_reduction(data_paths: list[Path],
     # Run dimensionality reduction
     if method == 't-SNE':
         reducer = TSNE(random_state=0, metric=metric, init='pca', n_jobs=-1, square_distances=True)
-    elif method == 'UMAP':
-        reducer = UMAP(random_state=0, metric=metric)
     else:
         raise ValueError(f'Dimensionality reduction method "{method}" is not supported.')
 
@@ -197,7 +194,7 @@ if __name__ == '__main__':
         """Path to CSV files containing SMILES."""
         save_dir: Path
         """Path to a directory where the dimensionality reduction plot will be saved."""
-        method: Literal['t-SNE', 'UMAP'] = 't-SNE'
+        method: Literal['t-SNE'] = 't-SNE'
         """Dimensionality reduction method."""
         metric: Literal['jaccard', 'euclidean'] = 'jaccard'
         """Metric to use to compared embeddings."""

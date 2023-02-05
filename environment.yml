@@ -13,7 +13,6 @@ dependencies:
   - rdkit
   - scikit-learn
   - tqdm
-  - umap-learn
   - pip:
     - typed-argument-parser
     - git+https://github.com/bp-kelley/descriptastorus

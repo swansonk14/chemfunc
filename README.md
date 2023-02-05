@@ -29,7 +29,7 @@ pip install -e .
 
 - [`compute_property_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/plot_property_distribution.py): Computes one or more molecular properties for a set of molecules.
 
-- [`dimensionality_reduction.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/dimensionality_reduction.py): Visualizes molecules in 2D by performing dimensionality reduction (t-SNE or UMAP) on Morgan fingerprints.
+- [`dimensionality_reduction.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/dimensionality_reduction.py): Visualizes molecules in 2D by performing dimensionality reduction (t-SNE) on Morgan fingerprints.
 
 - [`filter_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/filter_molecules.py): Filters molecules to those with values in a certain range.
 
