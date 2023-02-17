@@ -108,25 +108,6 @@ def dimensionality_reduction(data_paths: list[Path],
             embedding_columns.remove(smiles_column)
             embeddings.append(data[embedding_columns].to_numpy())
 
-    # # TODO: remove this
-    # # Temporary hack to show molecule filtering
-    # smiles_sets = [set(smiles[s]) for s in slices]
-    # np.random.seed(0)
-    # for i in range(4):
-    #     if len(smiles_sets[i]) > 2000:
-    #         smiles_sets[i] = {str(s) for s in np.random.choice(sorted(smiles_sets[i]), size=2000, replace=False)}
-    # generated_set = smiles_sets[3]
-    # final_set = smiles_sets[-1]
-    #
-    # smiles_sets = smiles_sets[:3] + [(smiles_set & generated_set) | final_set for smiles_set in smiles_sets[3:]]
-    #
-    # smiles, slices = [], []
-    # for smiles_set in smiles_sets:
-    #     smiles += sorted(smiles_set)
-    #     slices.append(slice(len(smiles) - len(smiles_set), len(smiles)))
-    #
-    # print(f'Final dataset size: {len(smiles):,}')
-
     # Get/compute molecule embeddings
     if embedder == 'morgan':
         embeddings = compute_fingerprints(smiles, fingerprint_type='morgan')

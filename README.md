@@ -27,7 +27,9 @@ pip install -e .
 
 - [`cluster_molecules.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/cluster_molecules.py): Performs k-means clustering to cluster molecules based on Morgan fingerprints.
 
-- [`compute_property_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/plot_property_distribution.py): Computes one or more molecular properties for a set of molecules.
+- [`compute_property_distribution.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/compute_property_distribution.py): Computes one or more molecular properties for a set of molecules.
+
+- [`deduplicate_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/deduplicate_smiles.py): Deduplicate a CSV files by SMILES.
 
 - [`dimensionality_reduction.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/dimensionality_reduction.py): Visualizes molecules in 2D by performing dimensionality reduction (t-SNE) on Morgan fingerprints.
 
@@ -51,7 +53,7 @@ pip install -e .
 
 - [`sdf_to_smiles.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/sdf_to_smiles.py): Converts an SDF file to a CSV file with SMILES.
 
-- [`smiles_to_svg.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/smiles_to-svg.py): Converts a SMILES string to an SVG image of the molecule.
+- [`smiles_to_svg.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/smiles_to_svg.py): Converts a SMILES string to an SVG image of the molecule.
 
 - [`select_from_clusters.py`](https://github.com/swansonk14/chem_utils/blob/main/chem_utils/select_from_clusters.py): Selects the best molecule from each cluster.
 
