@@ -63,13 +63,13 @@ def smiles_to_mol_wrapper(property_function: PropertyFunction) -> PropertyFuncti
     return wrapper
 
 
-@register_property_function('logp')
+@register_property_function('clogp')
 @smiles_to_mol_wrapper
-def compute_logp(molecule: Molecule) -> float:
-    """Computes the logP of a molecule.
+def compute_clogp(molecule: Molecule) -> float:
+    """Computes the cLogP of a molecule.
 
     :param molecule: A molecule, either a SMILES string or an RDKit molecule.
-    :return: The logP of the molecule.
+    :return: The cLogP of the molecule.
     """
     return MolLogP(molecule)
 
