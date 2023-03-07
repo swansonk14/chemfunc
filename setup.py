@@ -33,7 +33,7 @@ setup(
         'matplotlib',
         'numpy',
         'pandas',
-        'rdkit-pypi',
+        'rdkit',
         'scikit-learn',
         'tqdm',
         'typed-argument-parser>=1.8.0'
