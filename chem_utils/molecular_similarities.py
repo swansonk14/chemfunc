@@ -1,7 +1,7 @@
 """Functions to compute the similarities between molecules."""
 from itertools import product
 from multiprocessing import Pool
-from typing import Callable, Iterable, Optional
+from typing import Callable, Iterable
 
 import numpy as np
 from rdkit import Chem
@@ -12,7 +12,7 @@ from tqdm import tqdm
 from chem_utils.constants import Molecule
 from chem_utils.molecular_fingerprints import compute_fingerprints
 
-SimilarityFunction = Callable[[Iterable[Molecule], Optional[Iterable[Molecule]]], np.ndarray]
+SimilarityFunction = Callable[[Iterable[Molecule], Iterable[Molecule] | None], np.ndarray]
 SIMILARITY_FUNCTION_REGISTRY = {}
 
 
@@ -47,8 +47,10 @@ def get_available_similarity_functions() -> list[str]:
 
 
 @register_similarity_function('tanimoto')
-def compute_pairwise_tanimoto_similarities(mols_1: list[Molecule],
-                                           mols_2: Optional[list[Molecule]] = None) -> np.ndarray:
+def compute_pairwise_tanimoto_similarities(
+        mols_1: list[Molecule],
+        mols_2: list[Molecule] | None = None
+) -> np.ndarray:
     """
     Computes pairwise Tanimoto similarities between the molecules in mols_1 and mols_2.
 
@@ -58,8 +60,14 @@ def compute_pairwise_tanimoto_similarities(mols_1: list[Molecule],
     :return: A 2D numpy array of pairwise similarities.
     """
     # Compute Morgan fingerprints
-    fps_1 = np.array(compute_fingerprints(mols_1, fingerprint_type='morgan'), dtype=bool)
-    fps_2 = np.array(compute_fingerprints(mols_2, fingerprint_type='morgan'), dtype=bool) if mols_2 is not None else fps_1
+    fps_1 = np.array(compute_fingerprints(
+        mols=mols_1,
+        fingerprint_type='morgan'
+    ), dtype=bool)
+    fps_2 = np.array(compute_fingerprints(
+        mols=mols_2,
+        fingerprint_type='morgan'
+    ), dtype=bool) if mols_2 is not None else fps_1
 
     # Compute pairwise Tanimoto similarities
     tanimoto_distances = pairwise_distances(fps_1, fps_2, metric='jaccard', n_jobs=-1)
@@ -79,8 +87,10 @@ def compute_mcs_size(mols: Iterable[Chem.Mol]) -> int:
 
 
 @register_similarity_function('mcs')
-def compute_pairwise_mcs_similarities(mols_1: list[Molecule],
-                                      mols_2: Optional[list[Molecule]] = None) -> np.ndarray:
+def compute_pairwise_mcs_similarities(
+        mols_1: list[Molecule],
+        mols_2: list[Molecule] | None = None
+) -> np.ndarray:
     """
     Computes pairwise maximum common substructure (MCS) similarities between the molecules in mols_1 and mols_2.
 
@@ -90,17 +100,25 @@ def compute_pairwise_mcs_similarities(mols_1: list[Molecule],
     :return: A 2D numpy array of pairwise similarities.
     """
     # Convert SMILES to RDKit molecules if needed
-    mols_1 = [Chem.MolFromSmiles(mol) if isinstance(mol, str) else mol for mol in mols_1]
+    mols_1 = [
+        Chem.MolFromSmiles(mol) if isinstance(mol, str) else mol
+        for mol in mols_1
+    ]
 
     if mols_2 is not None:
-        mols_2 = [Chem.MolFromSmiles(mol) if isinstance(mol, str) else mol for mol in mols_2]
+        mols_2 = [
+            Chem.MolFromSmiles(mol) if isinstance(mol, str) else mol
+            for mol in mols_2
+        ]
     else:
         mols_2 = mols_1
 
     # Compute pairwise MCS similarities
     with Pool() as pool:
-        pairwise_mcs = np.array(list(tqdm(pool.imap(compute_mcs_size, product(mols_1, mols_2)),
-                                          total=len(mols_1) * len(mols_2))))
+        pairwise_mcs = np.array(
+            list(tqdm(pool.imap(compute_mcs_size, product(mols_1, mols_2)),
+                      total=len(mols_1) * len(mols_2)))
+        )
 
     pairwise_mcs = pairwise_mcs.reshape(len(mols_1), len(mols_2))
 
@@ -111,8 +129,10 @@ def compute_pairwise_mcs_similarities(mols_1: list[Molecule],
 
 
 @register_similarity_function('tversky')
-def compute_pairwise_tversky_similarities(mols_1: list[Molecule],
-                                          mols_2: Optional[list[Molecule]] = None) -> np.ndarray:
+def compute_pairwise_tversky_similarities(
+        mols_1: list[Molecule],
+        mols_2: list[Molecule] | None = None
+) -> np.ndarray:
     """
     Computes pairwise Tversky similarities between the molecules in mols_1 and mols_2.
 
@@ -136,10 +156,12 @@ def compute_pairwise_tversky_similarities(mols_1: list[Molecule],
     return tversky_similarities
 
 
-def compute_top_similarities(similarity_type: str,
-                             mols: list[Molecule],
-                             reference_mols: Optional[list[Molecule]] = None,
-                             top_k: int | float = 1) -> np.ndarray:
+def compute_top_similarities(
+        similarity_type: str,
+        mols: list[Molecule],
+        reference_mols: list[Molecule] | None = None,
+        top_k: int | float = 1
+) -> np.ndarray:
     """For each molecule in a list, computes the similarity of the top k most similar molecule in a reference set.
 
     If top_k == 1, this computes the nearest neighbor similarity.

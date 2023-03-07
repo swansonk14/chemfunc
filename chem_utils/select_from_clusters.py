@@ -6,11 +6,13 @@ import pandas as pd
 from chem_utils.constants import CLUSTER_COLUMN
 
 
-def select_from_clusters(data_path: Path,
-                         save_path: Path,
-                         value_column: str,
-                         cluster_column: str = CLUSTER_COLUMN,
-                         ascending: bool = False) -> None:
+def select_from_clusters(
+        data_path: Path,
+        save_path: Path,
+        value_column: str,
+        cluster_column: str = CLUSTER_COLUMN,
+        ascending: bool = False
+) -> None:
     """Selects the best molecule from each cluster.
 
     :param data_path: Path to CSV file containing molecules.

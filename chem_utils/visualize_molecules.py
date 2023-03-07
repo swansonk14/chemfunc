@@ -1,7 +1,7 @@
 """Converts molecule SMILES to grids of images."""
 import math
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 import pandas as pd
 from rdkit import Chem
@@ -11,13 +11,15 @@ from tqdm import trange, tqdm
 from chem_utils.constants import SMILES_COLUMN
 
 
-def visualize_molecules(data_path: Path,
-                        save_dir: Path,
-                        smiles_column: str = SMILES_COLUMN,
-                        num_rows: int = 5,
-                        mols_per_row: int = 10,
-                        num_molecules: Optional[int] = None,
-                        image_format: Literal['PNG', 'SVG'] = 'PNG') -> None:
+def visualize_molecules(
+        data_path: Path,
+        save_dir: Path,
+        smiles_column: str = SMILES_COLUMN,
+        num_rows: int = 5,
+        mols_per_row: int = 10,
+        num_molecules: int | None = None,
+        image_format: Literal['PNG', 'SVG'] = 'PNG'
+) -> None:
     """Converts molecule SMILES to grids of images.
 
     :param data_path: Path to CSV file containing SMILES.

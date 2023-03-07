@@ -6,11 +6,13 @@ import pandas as pd
 from sklearn.metrics import average_precision_score, mean_squared_error, r2_score, roc_auc_score
 
 
-def measure_experimental_reproducibility(data_path: Path,
-                                         rep_1_column: str,
-                                         rep_2_column: str,
-                                         threshold: float,
-                                         plot: bool = False) -> None:
+def measure_experimental_reproducibility(
+        data_path: Path,
+        rep_1_column: str,
+        rep_2_column: str,
+        threshold: float,
+        plot: bool = False
+) -> None:
     """Measure experimental reproducibility by comparing biological replicates.
 
     :param data_path: Path to CSV file containing two biological replicates.

@@ -9,16 +9,20 @@ from tqdm import tqdm
 from chem_utils.constants import SMILES_COLUMN
 
 
-def canonicalize_smiles(data_path: Path,
-                        save_path: Path,
-                        smiles_column: str = SMILES_COLUMN,
-                        remove_salts: bool = False,
-                        delete_disconnected_mols: bool = False) -> None:
+def canonicalize_smiles(
+        data_path: Path,
+        save_path: Path | None = None,
+        smiles_column: str = SMILES_COLUMN,
+        canonical_smiles_column: str = SMILES_COLUMN,
+        remove_salts: bool = False,
+        delete_disconnected_mols: bool = False
+) -> None:
     """Canonicalizes SMILES using RDKit canonicalization and optionally strips salts.
 
     :param data_path: Path to CSV file containing SMILES.
-    :param save_path: Path where CSV file with canonicalized SMILES will be saved.
+    :param save_path: Path where CSV file with canonicalized SMILES will be saved. If None, uses data_path.
     :param smiles_column: Name of the column containing SMILES.
+    :param canonical_smiles_column: Name of the column where canonicalized SMILES will be saved.
     :param remove_salts: Whether to remove salts from the SMILES.
     :param delete_disconnected_mols: Whether to delete disconnected molecules, i.e., any molecule whose
                                      SMILES has a '.' in it. This is performed after (optionally) removing salts.
@@ -45,11 +49,11 @@ def canonicalize_smiles(data_path: Path,
         mols = [remover.StripMol(mol, dontRemoveEverything=True) for mol in tqdm(mols, desc='Stripping salts')]
 
     # Convert mol to SMILES (implicitly canonicalizes SMILES)
-    data[smiles_column] = [Chem.MolToSmiles(mol) for mol in tqdm(mols, desc='Mol to SMILES')]
+    data[canonical_smiles_column] = [Chem.MolToSmiles(mol) for mol in tqdm(mols, desc='Mol to SMILES')]
 
     # Optionally delete disconnected molecules
     if delete_disconnected_mols:
-        connected_mols = ['.' not in smiles for smiles in data[smiles_column]]
+        connected_mols = ['.' not in smiles for smiles in data[canonical_smiles_column]]
 
         if not all(connected_mols):
             print(f'Found {len(connected_mols) - sum(connected_mols)} disconnected molecules. Deleting.')
@@ -57,6 +61,9 @@ def canonicalize_smiles(data_path: Path,
             print(f'Remaining data size = {len(data):,}')
 
     # Save data
+    if save_path is None:
+        save_path = data_path
+
     save_path.parent.mkdir(parents=True, exist_ok=True)
     data.to_csv(save_path, index=False)
 

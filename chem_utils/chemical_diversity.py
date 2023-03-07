@@ -9,9 +9,11 @@ from chem_utils.constants import SMILES_COLUMN
 from chem_utils.molecular_similarities import get_similarity_function
 
 
-def chemical_diversity(data_path: Path,
-                       smiles_column: str = SMILES_COLUMN,
-                       similarity_type: Literal['tanimoto', 'tversky'] = 'tanimoto') -> None:
+def chemical_diversity(
+        data_path: Path,
+        smiles_column: str = SMILES_COLUMN,
+        similarity_type: Literal['tanimoto', 'tversky'] = 'tanimoto'
+) -> None:
     """Computes the chemical diversity of a list of molecules in terms of chemical distances.
 
     Note: Does NOT remove duplicate SMILES before computing pairwise distances.

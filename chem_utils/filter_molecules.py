@@ -1,18 +1,19 @@
 """Filters molecules to those with values in a certain range."""
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 import pandas as pd
 
 
-def filter_molecules(data_path: Path,
-                     save_path: Path,
-                     filter_column: str,
-                     min_value: Optional[float] = None,
-                     max_value: Optional[float] = None,
-                     bottom_proportion: Optional[float] = None,
-                     top_proportion: Optional[float] = None) -> None:
+def filter_molecules(
+        data_path: Path,
+        save_path: Path,
+        filter_column: str,
+        min_value: float | None = None,
+        max_value: float | None = None,
+        bottom_proportion: float | None = None,
+        top_proportion: float | None = None
+) -> None:
     """Filters molecules to those with values in a certain range.
 
     :param data_path: Path to CSV file containing molecules.

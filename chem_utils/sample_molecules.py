@@ -1,15 +1,16 @@
 """Samples molecules, either uniformly at random across the entire dataset or uniformly at random from each cluster."""
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 from tqdm import tqdm
 
 
-def sample_molecules(data_path: Path,
-                     save_path: Path,
-                     num_molecules: int,
-                     cluster_column: Optional[str] = None) -> None:
+def sample_molecules(
+        data_path: Path,
+        save_path: Path,
+        num_molecules: int,
+        cluster_column: str | None = None
+) -> None:
     """Samples molecules, either uniformly at random across the entire dataset or uniformly at random from each cluster.
 
     :param data_path: Path to CSV file containing SMILES.

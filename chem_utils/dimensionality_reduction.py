@@ -1,7 +1,7 @@
 """Runs dimensionality reduction (t-SNE) on molecular fingerprints from one or more chemical libraries."""
 import time
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,17 +13,19 @@ from chem_utils.constants import SMILES_COLUMN
 from chem_utils.molecular_fingerprints import compute_fingerprints
 
 
-def dimensionality_reduction(data_paths: list[Path],
-                             save_dir: Path,
-                             method: Literal['t-SNE'] = 't-SNE',
-                             metric: Literal['jaccard', 'euclidean'] = 'jaccard',
-                             embedder: Literal['morgan', 'file'] = 'morgan',
-                             max_molecules: Optional[list[int]] = None,
-                             colors: Optional[list[str]] = None,
-                             smiles_columns: Optional[list[Path]] = None,
-                             data_names: Optional[list[str]] = None,
-                             highlight_data_names: Optional[set[str]] = None,
-                             display_data_names: Optional[set[str]] = None) -> None:
+def dimensionality_reduction(
+        data_paths: list[Path],
+        save_dir: Path,
+        method: Literal['t-SNE'] = 't-SNE',
+        metric: Literal['jaccard', 'euclidean'] = 'jaccard',
+        embedder: Literal['morgan', 'file'] = 'morgan',
+        max_molecules: list[int] | None = None,
+        colors: list[str] | None = None,
+        smiles_columns: list[Path] | None = None,
+        data_names: list[str] | None = None,
+        highlight_data_names: set[str] | None = None,
+        display_data_names: set[str] | None = None
+) -> None:
     """Runs dimensionality reduction (t-SNE) on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.

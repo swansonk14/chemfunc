@@ -7,11 +7,13 @@ import pandas as pd
 from tqdm import tqdm
 
 
-def plot_property_distribution(data_paths: list[Path],
-                               property_column: str,
-                               save_dir: Path,
-                               min_value: float = -float('inf'),
-                               max_value: float = float('inf')) -> None:
+def plot_property_distribution(
+        data_paths: list[Path],
+        property_column: str,
+        save_dir: Path,
+        min_value: float = -float('inf'),
+        max_value: float = float('inf')
+) -> None:
     """Plots the distribution of property values over one or more sets of molecules
 
     :param data_paths: Path to CSV files containing SMILES.

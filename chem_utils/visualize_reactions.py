@@ -1,17 +1,19 @@
 """Converts reaction SMARTS to images."""
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 import pandas as pd
 from rdkit.Chem import AllChem, Draw
 from tqdm import tqdm
 
 
-def visualize_reactions(data_path: Path,
-                        save_dir: Path,
-                        save_format: Literal['png', 'svg'] = 'svg',
-                        smarts_column: str = 'smarts',
-                        name_column: Optional[str] = None) -> None:
+def visualize_reactions(
+        data_path: Path,
+        save_dir: Path,
+        save_format: Literal['png', 'svg'] = 'svg',
+        smarts_column: str = 'smarts',
+        name_column: str | None = None
+) -> None:
     """Converts reaction SMARTS to images
 
     :param data_path: Path to CSV file containing reaction SMARTS.

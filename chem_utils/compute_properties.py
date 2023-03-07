@@ -1,7 +1,6 @@
 """Computes one or more molecular properties a set of molecules."""
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 from tqdm import tqdm
@@ -12,7 +11,7 @@ from chem_utils.molecular_properties import get_property_function
 
 def compute_properties(data_path: Path,
                        properties: str,
-                       save_path: Optional[Path] = None,
+                       save_path: Path | None = None,
                        smiles_column: str = SMILES_COLUMN) -> None:
     """Computes one or more molecular properties a set of molecules.
 

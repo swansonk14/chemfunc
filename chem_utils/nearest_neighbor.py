@@ -1,6 +1,6 @@
 """Given a dataset of molecules, computes the nearest neighbor molecule in a second dataset using one of several similarity metrics."""
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 import numpy as np
 import pandas as pd
@@ -9,13 +9,15 @@ from chem_utils.constants import SMILES_COLUMN
 from chem_utils.molecular_similarities import get_similarity_function
 
 
-def nearest_neighbor(data_path: Path,
-                     reference_data_path: Path,
-                     metrics: Literal['tanimoto', 'mcs', 'tversky'] = 'tanimoto',
-                     save_path: Optional[Path] = None,
-                     smiles_column: str = SMILES_COLUMN,
-                     reference_smiles_column: Optional[str] = None,
-                     reference_name: Optional[str] = None):
+def nearest_neighbor(
+        data_path: Path,
+        reference_data_path: Path,
+        metrics: Literal['tanimoto', 'mcs', 'tversky'] = 'tanimoto',
+        save_path: Path | None = None,
+        smiles_column: str = SMILES_COLUMN,
+        reference_smiles_column: str | None = None,
+        reference_name: str | None = None
+) -> None:
     """Given a dataset, computes the nearest neighbor molecule by Tanimoto similarity in a second dataset.
 
     :param data_path: Path to CSV file containing data with SMILES whose neighbors are to be computed.

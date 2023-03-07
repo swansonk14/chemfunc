@@ -1,6 +1,5 @@
 """Converts molecules in SDF format to a CSV with SMILES."""
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 from rdkit import Chem
@@ -9,10 +8,12 @@ from tqdm import tqdm
 from chem_utils.constants import SMILES_COLUMN
 
 
-def sdf_to_smiles(data_path: Path,
-                  save_path: Path,
-                  properties: Optional[list[str]] = None,
-                  deduplicate: bool = False) -> None:
+def sdf_to_smiles(
+        data_path: Path,
+        save_path: Path,
+        properties: list[str] | None = None,
+        deduplicate: bool = False
+) -> None:
     """Converts molecules in SDF format to a CSV with SMILES.
 
     :param data_path: Path to an SDF file.

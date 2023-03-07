@@ -50,9 +50,11 @@ def get_available_fingerprint_generators() -> list[str]:
 
 # TODO: load all of this from chem_utils instead
 @register_fingerprint_generator('morgan')
-def compute_morgan_fingerprint(mol: Molecule,
-                               radius: int = MORGAN_RADIUS,
-                               num_bits: int = MORGAN_NUM_BITS) -> np.ndarray:
+def compute_morgan_fingerprint(
+        mol: Molecule,
+        radius: int = MORGAN_RADIUS,
+        num_bits: int = MORGAN_NUM_BITS
+) -> np.ndarray:
     """Generates a binary Morgan fingerprint for a molecule.
 
     :param mol: A molecule (i.e., either a SMILES string or an RDKit molecule).

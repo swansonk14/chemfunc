@@ -1,6 +1,5 @@
 """Clusters molecules by Morgan fingerprint."""
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 from sklearn.cluster import KMeans, MiniBatchKMeans
@@ -9,11 +8,13 @@ from chem_utils.constants import CLUSTER_COLUMN, SMILES_COLUMN
 from chem_utils.molecular_similarities import compute_fingerprints
 
 
-def cluster_molecules(data_path: Path,
-                      save_path: Optional[Path] = None,
-                      smiles_column: str = SMILES_COLUMN,
-                      num_clusters: int = 50,
-                      mini_batch: bool = False) -> None:
+def cluster_molecules(
+        data_path: Path,
+        save_path: Path | None = None,
+        smiles_column: str = SMILES_COLUMN,
+        num_clusters: int = 50,
+        mini_batch: bool = False
+) -> None:
     """Clusters molecules by Morgan fingerprint.
 
     :param data_path: Path to CSV file containing SMILES.
