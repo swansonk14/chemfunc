@@ -1,6 +1,12 @@
+from pathlib import Path
 from setuptools import find_packages, setup
 
-__version__ = '1.0.0'
+# Load version number
+__version__ = ''
+version_file = Path(__file__).parent.absolute() / 'chem_utils' / '_version.py'
+
+with open(version_file) as fd:
+    exec(fd.read())
 
 # Load README
 with open('README.md', encoding='utf-8') as f:
