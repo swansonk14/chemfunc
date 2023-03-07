@@ -34,13 +34,6 @@ def select_from_clusters(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing molecules.
-        save_path: Path  # Path to CSV file where selected molecules will be saved.
-        value_column: str  # Name of the column containing values to sort molecules by.
-        cluster_column: str = CLUSTER_COLUMN  # Name of the column containing cluster labels.
-        ascending: bool = False  # Sorts molecules in each cluster from lowest to highest rather than highest to lowest.
-
-    select_from_clusters(**Args().parse_args().as_dict())
+    tapify(select_from_clusters)

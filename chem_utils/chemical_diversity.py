@@ -47,11 +47,6 @@ def chemical_diversity(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing molecule SMILES.
-        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-        similarity_type: Literal['tanimoto', 'tversky'] = 'tanimoto'  # Type of similarity to use when computing distances.
-
-    chemical_diversity(**Args().parse_args().as_dict())
+    tapify(chemical_diversity)

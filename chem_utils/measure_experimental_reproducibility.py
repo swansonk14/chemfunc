@@ -10,7 +10,7 @@ def measure_experimental_reproducibility(data_path: Path,
                                          rep_1_column: str,
                                          rep_2_column: str,
                                          threshold: float,
-                                         plot: bool) -> None:
+                                         plot: bool = False) -> None:
     """Measure experimental reproducibility by comparing biological replicates.
 
     :param data_path: Path to CSV file containing two biological replicates.
@@ -60,13 +60,6 @@ def measure_experimental_reproducibility(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing two biological replicates.
-        rep_1_column: str  # Name of the column containing the first biological replicate.
-        rep_2_column: str  # Name of the column containing the second biological replicate.
-        threshold: float  # Threshold for binarizing the data.
-        plot: bool = False  # Whether to plot the correlation between the two replicates.
-
-    measure_experimental_reproducibility(**Args().parse_args().as_dict())
+    tapify(measure_experimental_reproducibility)

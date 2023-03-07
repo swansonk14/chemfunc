@@ -88,27 +88,6 @@ def filter_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing molecules.
-        save_path: Path  # Path to CSV file where filtered molecules will be saved.
-        filter_column: str  # Name of the column to use to filter molecules.
-        min_value: Optional[float] = None  # Minimum value (inclusive) for the filter_column.
-        max_value: Optional[float] = None  # Maximum value (inclusive) for the filter_column.
-        bottom_proportion: Optional[float] = None
-        """
-        Keeps this proportion of the molecules with the lowest filter_column values.
-        E.g., bottom_proportion 0.2 keeps the molecules with the lowest 20% of values.
-        Note: Applied *after* filtering by min_value and max_value
-              and at the same time as top_proportion.
-        """
-        top_proportion: Optional[float] = None
-        """
-        Keeps this proportion of the molecules with the highest filter_column values.
-        E.g., top_proportion 0.2 keeps the molecules with the highest 20% of values.
-        Note: Applied *after* filtering by min_value and max_value
-              and at the same time as bottom_proportion.
-        """
-
-    filter_molecules(**Args().parse_args().as_dict())
+    tapify(filter_molecules)

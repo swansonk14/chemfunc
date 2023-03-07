@@ -62,18 +62,6 @@ def canonicalize_smiles(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing SMILES.
-        save_path: Path  # Path where CSV file with canonicalized SMILES will be saved.
-        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-        remove_salts: bool = False  # Whether to remove salts from the SMILES.
-        delete_disconnected_mols: bool = False
-        """
-        Whether to delete disconnected molecules, i.e., any molecule whose
-        SMILES has a '.' in it. This is performed after (optionally) removing salts.
-        This deletes the entire row from the Pandas DataFrame.
-        """
-
-    canonicalize_smiles(**Args().parse_args().as_dict())
+    tapify(canonicalize_smiles)

@@ -39,14 +39,6 @@ def regression_to_classification(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing regression data.
-        regression_column: str  # Name of the column containing regression data.
-        classification_column: str  # Name of the column where the classification data will be stored.
-        thresholds: list[float]  # Thresholds to use to convert the regression data to classification data.
-        save_path: Path  # Path to CSV file where classification data will be saved.
-        high_to_low: bool = False  # Whether class indices should be assigned from highest regression value to lowest.
-
-    regression_to_classification(**Args().parse_args().as_dict())
+    tapify(regression_to_classification)

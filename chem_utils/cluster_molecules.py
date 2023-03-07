@@ -49,13 +49,6 @@ def cluster_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing SMILES.
-        save_path: Optional[Path] = None  # Path to CSV file where the clustering will be saved (defaults to data_path).
-        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-        num_clusters: int = 50  # Number of clusters.
-        mini_batch: bool = False  # Whether to use mini batch k-means instead of standard k-means.
-
-    cluster_molecules(**Args().parse_args().as_dict())
+    tapify(cluster_molecules)

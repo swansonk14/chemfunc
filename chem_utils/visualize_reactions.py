@@ -53,13 +53,6 @@ def visualize_reactions(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing reaction SMARTS.
-        save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
-        save_format: Literal['png', 'svg'] = 'svg'  # Image format to use when saving images.
-        smarts_column: str = 'smarts'  # Name of the column containing reaction SMARTS.
-        name_column: Optional[str] = None  # Name of the column containing the reaction name to use when naming the image file.
-
-    visualize_reactions(**Args().parse_args().as_dict())
+    tapify(visualize_reactions)

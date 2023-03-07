@@ -74,21 +74,6 @@ def nearest_neighbor(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing data with SMILES whose neighbors are to be computed.
-        reference_data_path: Path  # Path to CSV file containing reference SMILES which will be the neighbors of data_path.
-        metrics: list[Literal['tanimoto', 'mcs', 'tversky']] = ['tanimoto']  # Metrics to use when computing similarity.
-        """
-        tanimoto: Tanimoto similarity using Morgan fingerprint.
-        mcs: Maximum common substructure as a proportion of the number of atoms in the reference molecule.
-        tversky: Tversky index with alpha = 0 and beta = 1, i.e., the proportion of reference substructures in the molecule.
-        """
-        save_path: Optional[Path] = None  # Where the data with the neighbor info should be saved (defaults to data_path).
-        smiles_column: str = SMILES_COLUMN  # Name of the column in data_path containing SMILES.
-        reference_smiles_column: Optional[str] = None  # Name of the column in reference_data_path containing SMILES.
-        """If None, then smiles_column is used."""
-        reference_name: Optional[str] = None  # Name of the reference data when naming the new columns with neighbor info.
-
-    nearest_neighbor(**Args().parse_args().as_dict())
+    tapify(nearest_neighbor)

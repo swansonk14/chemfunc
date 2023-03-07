@@ -40,16 +40,6 @@ def sample_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing SMILES.
-        save_path: Path  # Path to CSV file where the selected molecules will be saved.
-        num_molecules: int  # Number of molecules to select.
-        cluster_column: Optional[str] = None  # Name of the column containing cluster labels.
-        """
-        If None, molecules are selected uniformly at random.
-        If provided, molecules are selected uniformly at random in each cluster with num_molecules per cluster.
-        """
-
-    sample_molecules(**Args().parse_args().as_dict())
+    tapify(sample_molecules)

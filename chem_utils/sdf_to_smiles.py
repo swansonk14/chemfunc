@@ -67,12 +67,6 @@ def sdf_to_smiles(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to an SDF file.
-        save_path: Path  # Path to a CSV file where SMILES strings will be saved.
-        properties: Optional[list[str]] = None  # List of properties to extract from the SDF for each molecule.
-        deduplicate: bool = False  # Whether to deduplicate SMILES.
-
-    sdf_to_smiles(**Args().parse_args().as_dict())
+    tapify(sdf_to_smiles)

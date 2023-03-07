@@ -9,7 +9,7 @@ from chem_utils.constants import SMILES_COLUMN
 def deduplicate_smiles(
         data_path: Path,
         save_path: Path,
-        smiles_column: str
+        smiles_column: str = SMILES_COLUMN
 ) -> None:
     """Deduplicate a CSV file by SMILES.
 
@@ -33,11 +33,6 @@ def deduplicate_smiles(
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing SMILES.
-        save_path: Path  # Path to CSV file where deduplicated SMILES will be saved.
-        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES to deduplicate.
-
-    deduplicate_smiles(**Args().parse_args().as_dict())
+    tapify(deduplicate_smiles)

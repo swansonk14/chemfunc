@@ -7,7 +7,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from chem_utils.constants import SMILES_COLUMN
-from chem_utils.molecular_properties import get_available_property_functions, get_property_function
+from chem_utils.molecular_properties import get_property_function
 
 
 def compute_properties(data_path: Path,
@@ -47,15 +47,6 @@ def compute_properties(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to a CSV file containing SMILES.
-        properties: list[str]  # The names of the properties to compute.
-        save_path: Optional[Path] = None  # Path to a CSV file where SMILES with properties is saved. If None, uses data_path.
-        smiles_column: str = SMILES_COLUMN  # The name of the column in data_paths containing SMILES.
-
-        def configure(self) -> None:
-            self.add_argument('--properties', choices=get_available_property_functions())
-
-    compute_properties(**Args().parse_args().as_dict())
+    tapify(compute_properties)

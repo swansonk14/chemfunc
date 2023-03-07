@@ -26,10 +26,6 @@ def smiles_to_svg(smiles: str, save_path: Path) -> None:
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        smiles: str  # A SMILES string.
-        save_path: Path  # Path to an SVG file where the molecule image will be saved.
-
-    smiles_to_svg(**Args().parse_args().as_dict())
+    tapify(smiles_to_svg)

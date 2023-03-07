@@ -55,13 +55,6 @@ def plot_property_distribution(data_paths: list[Path],
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_paths: list[Path]  # Path to CSV files containing SMILES.
-        property_column: str  # Name of the column containing the property values.
-        save_dir: Path  # Path to a directory where the plot and (optionally) data will be saved.
-        min_value: float = -float('inf')  # Minimum property value to plot (removes outliers).
-        max_value: float = float('inf')  # Maximum property value to plot (removes outliers).
-
-    plot_property_distribution(**Args().parse_args().as_dict())
+    tapify(plot_property_distribution)

@@ -67,15 +67,6 @@ def visualize_molecules(data_path: Path,
 
 
 if __name__ == '__main__':
-    from tap import Tap
+    from tap import tapify
 
-    class Args(Tap):
-        data_path: Path  # Path to CSV file containing SMILES.
-        save_dir: Path  # Path to a directory where visualized molecules will be saved as images.
-        smiles_column: str = SMILES_COLUMN  # Name of the column containing SMILES.
-        num_rows: int = 5  # Number of rows of molecules/rationales per image.
-        mols_per_row: int = 10  # Number of molecules/rationales per row.
-        num_molecules: Optional[int] = None  # Number of molecules to visualize (if None, visualizes all molecules).
-        image_format: Literal['PNG', 'SVG'] = 'PNG'  # Image format to use when saving images.
-
-    visualize_molecules(**Args().parse_args().as_dict())
+    tapify(visualize_molecules)
