@@ -23,11 +23,12 @@ Chem Utils contains a variety of useful functions and scripts for working with s
 
 Functions can be imported from the `chem_utils` package. For example:
 ```python
+from pathlib import Path
 from chem_utils.sdf_to_smiles import sdf_to_smiles
 
 sdf_to_smiles(
-    data_path='molecules.sdf',
-    save_path='molecules.csv'
+    data_path=Path('molecules.sdf'),
+    save_path=Path('molecules.csv')
 )
 ```
 
@@ -38,7 +39,7 @@ python -m chem_utils.sdf_to_smiles \
     --save_path molecules.csv
 ```
 
-For scripts, run `python <script_name> -h` to see a description of the arguments.
+For scripts, run `python -m chem_utils.<script_name> -h` to see a description of the arguments.
 
 
 ## Contents
