@@ -6,6 +6,7 @@ channels:
 
 dependencies:
   - python>=3.10
+  - descriptastorus
   - matplotlib
   - numpy
   - pandas
@@ -14,5 +15,4 @@ dependencies:
   - scikit-learn
   - tqdm
   - pip:
-    - typed-argument-parser
-    - git+https://github.com/bp-kelley/descriptastorus
+    - typed-argument-parser>=1.8.0

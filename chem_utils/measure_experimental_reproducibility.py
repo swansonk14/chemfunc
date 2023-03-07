@@ -3,19 +3,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.metrics import auc, mean_squared_error, precision_recall_curve, r2_score, roc_auc_score
-
-
-def prc_auc_score(targets: list[int], preds: list[float]) -> float:
-    """
-    Computes the area under the precision-recall curve.
-
-    :param targets: A list of binary targets.
-    :param preds: A list of prediction probabilities.
-    :return: The computed prc-auc.
-    """
-    precision, recall, _ = precision_recall_curve(targets, preds)
-    return auc(recall, precision)
+from sklearn.metrics import average_precision_score, mean_squared_error, r2_score, roc_auc_score
 
 
 def measure_experimental_reproducibility(data_path: Path,
@@ -62,7 +50,7 @@ def measure_experimental_reproducibility(data_path: Path,
     print(f'Number of actives in replicate 1 = {sum(rep_1_binary):,}')
     print(f'Number of actives in replicate 2 = {sum(rep_2_binary):,}\n')
 
-    for score_name, score_function in [('AUC', roc_auc_score), ('PRC-AUC', prc_auc_score)]:
+    for score_name, score_function in [('AUC', roc_auc_score), ('PRC-AUC', average_precision_score)]:
         # Note: negative needed since lower scores predict actives
         rep_1_predicts_rep_2 = score_function(rep_2_binary, -rep_1)
         rep_2_predicts_rep_1 = score_function(rep_1_binary, -rep_2)

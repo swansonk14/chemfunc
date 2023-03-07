@@ -1,9 +1,9 @@
 """Functions to compute fingerprints for molecules."""
+import sys
 from multiprocessing import Pool
 from typing import Callable
 
 import numpy as np
-from descriptastorus.descriptors import rdNormalizedDescriptors
 from rdkit import Chem
 from rdkit.DataStructs import ConvertToNumpyArray
 from rdkit.Chem import AllChem
@@ -76,6 +76,10 @@ def compute_rdkit_fingerprint(mol: Molecule) -> np.ndarray:
     :param mol: A molecule (i.e., either a SMILES or an RDKit molecule).
     :return: A 1D numpy array containing the RDKit 2D normalized features.
     """
+    # Import descriptastorus if not already imported
+    if 'descriptastorus.descriptors.rdNormalizedDescriptors' not in sys.modules:
+        from descriptastorus.descriptors import rdNormalizedDescriptors
+
     smiles = Chem.MolToSmiles(mol, isomericSmiles=True) if type(mol) != str else mol
     generator = rdNormalizedDescriptors.RDKit2DNormalized()
     rdkit_fp = generator.process(smiles)[1:]

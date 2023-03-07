@@ -6,8 +6,6 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from chem_utils.constants import SMILES_COLUMN
-
 
 def plot_property_distribution(data_paths: list[Path],
                                property_column: str,

@@ -1,9 +1,7 @@
 """Holds constant values."""
-from typing import Union
+from rdkit.Chem import Mol
 
-from rdkit import Chem
-
-Molecule = Union[str, Chem.Mol]
+Molecule = str | Mol
 
 CLUSTER_COLUMN = 'cluster_label'
 SMILES_COLUMN = 'smiles'

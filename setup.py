@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 
 # Load README
 with open('README.md', encoding='utf-8') as f:
@@ -23,17 +23,18 @@ setup(
     packages=find_packages(),
     package_data={'chem_utils': ['py.typed']},
     install_requires=[
+        'descriptastorus',
         'matplotlib',
         'numpy',
         'pandas',
+        'rdkit-pypi',
         'scikit-learn',
         'tqdm',
-        'typed-argument-parser'
+        'typed-argument-parser>=1.8.0'
     ],
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     classifiers=[
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'License :: OSI Approved :: MIT License',

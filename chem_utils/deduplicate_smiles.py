@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from constants import SMILES_COLUMN
+from chem_utils.constants import SMILES_COLUMN
 
 
 def deduplicate_smiles(

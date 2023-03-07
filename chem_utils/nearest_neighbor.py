@@ -9,31 +9,6 @@ from chem_utils.constants import SMILES_COLUMN
 from chem_utils.molecular_similarities import get_similarity_function
 
 
-def add_nearest_neighbors(data: pd.DataFrame,
-                          similarities: np.ndarray,
-                          reference_smiles: list[str],
-                          prefix: str = '') -> None:
-    """
-    Adds nearest neighbors to a DataFrame.
-
-    :param data: The Pandas DataFrame to which the nearest neighbors will be added.
-    :param similarities: A NumPy matrix of similarities between the data SMILES (rows)
-                         and the reference SMILES (columns).
-    :param reference_smiles: The reference SMILES corresponding to the columns of similarities.
-    :param prefix: The prefix to describe the nearest neighbors.
-    """
-    assert similarities.shape[1] == len(reference_smiles)
-
-    max_similarity_indices = np.argmax(similarities, axis=1)
-
-    data[f'{prefix}nearest_neighbor'] = [
-        reference_smiles[max_similarity_index] for max_similarity_index in max_similarity_indices
-    ]
-    data[f'{prefix}nearest_neighbor_similarity'] = [
-        similarities[i, max_similarity_index] for i, max_similarity_index in enumerate(max_similarity_indices)
-    ]
-
-
 def nearest_neighbor(data_path: Path,
                      reference_data_path: Path,
                      metrics: Literal['tanimoto', 'mcs', 'tversky'] = 'tanimoto',
@@ -81,12 +56,17 @@ def nearest_neighbor(data_path: Path,
 
         print('Finding minimum distance SMILES')
         prefix = f'{f"{reference_name}_" if reference_name is not None else ""}{metric}_'
-        add_nearest_neighbors(
-            data=data,
-            similarities=similarities,
-            reference_smiles=reference_data[reference_smiles_column],
-            prefix=prefix
-        )
+
+        max_similarity_indices = np.argmax(similarities, axis=1)
+
+        data[f'{prefix}nearest_neighbor'] = [
+            reference_data[reference_smiles_column][max_similarity_index]
+            for max_similarity_index in max_similarity_indices
+        ]
+        data[f'{prefix}nearest_neighbor_similarity'] = [
+            similarities[i, max_similarity_index]
+            for i, max_similarity_index in enumerate(max_similarity_indices)
+        ]
 
     print('Saving')
     save_path.parent.mkdir(parents=True, exist_ok=True)
