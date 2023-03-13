@@ -9,7 +9,7 @@ def regression_to_classification(
         data_path: Path,
         regression_column: str,
         classification_column: str,
-        thresholds: list[str],
+        thresholds: list[float],
         save_path: Path | None = None,
         high_to_low: bool = False
 ) -> None:
