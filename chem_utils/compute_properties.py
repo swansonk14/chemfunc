@@ -10,13 +10,13 @@ from chem_utils.molecular_properties import get_property_function
 
 
 def compute_properties(data_path: Path,
-                       properties: str,
+                       properties: list[str],
                        save_path: Path | None = None,
                        smiles_column: str = SMILES_COLUMN) -> None:
     """Computes one or more molecular properties a set of molecules.
 
     :param data_path: Path to a CSV file containing SMILES.
-    :param properties: The name of the property to compute.
+    :param properties: The name of the properties to compute.
     :param save_path: Path to a CSV file where SMILES with properties is saved. If None, uses data_path.
     :param smiles_column: The name of the column in data_path containing SMILES.
     """
