@@ -34,6 +34,12 @@ def visualize_molecules(
     data = pd.read_csv(data_path)
     print(f'Data size = {len(data):,}')
 
+    # Optionally subsample molecules
+    if num_molecules is not None:
+        data = data.iloc[:num_molecules]
+
+    num_molecules = len(data)
+
     # Convert SMILES to Mols
     mols = [Chem.MolFromSmiles(s) for s in tqdm(data[smiles_column], desc='SMILES to Mol')]
 
@@ -41,7 +47,6 @@ def visualize_molecules(
     mols_per_image = num_rows * mols_per_row
     max_index = int(math.ceil(len(data) / mols_per_image))
     num_digits = len(str(max_index))
-    num_molecules = num_molecules or len(data)
     print(f'Visualizing {num_molecules:,} molecules')
 
     save_dir.mkdir(parents=True, exist_ok=True)
