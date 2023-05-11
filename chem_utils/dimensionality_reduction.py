@@ -21,7 +21,7 @@ def dimensionality_reduction(
         embedder: Literal['morgan', 'file'] = 'morgan',
         max_molecules: list[int] | None = None,
         colors: list[str] | None = None,
-        smiles_columns: list[Path] | None = None,
+        smiles_columns: list[str] | None = None,
         data_names: list[str] | None = None,
         highlight_data_names: set[str] | None = None,
         display_data_names: set[str] | None = None
