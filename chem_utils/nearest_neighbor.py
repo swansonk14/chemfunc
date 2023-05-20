@@ -12,7 +12,7 @@ from chem_utils.molecular_similarities import get_similarity_function
 def nearest_neighbor(
         data_path: Path,
         reference_data_path: Path,
-        metrics: Literal['tanimoto', 'mcs', 'tversky'] = 'tanimoto',
+        metrics: tuple[Literal['tanimoto', 'mcs', 'tversky'], ...] = ('tanimoto',),
         save_path: Path | None = None,
         smiles_column: str = SMILES_COLUMN,
         reference_smiles_column: str | None = None,
