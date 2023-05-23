@@ -5,8 +5,8 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 
-from chem_func.constants import SMILES_COLUMN
-from chem_func.molecular_similarities import get_similarity_function
+from chemfunc.constants import SMILES_COLUMN
+from chemfunc.molecular_similarities import get_similarity_function
 
 
 def nearest_neighbor(

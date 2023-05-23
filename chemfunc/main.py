@@ -1,7 +1,7 @@
-"""Entry point to the chem_func package."""
+"""Entry point to the chemfunc package."""
 from tap import Tap
 
-from chem_func import *
+from chemfunc import *
 
 
 FUNCTIONS = [
@@ -30,10 +30,10 @@ NAME_TO_FUNCTION = {
 
 
 class ChemUtilsTap(Tap):
-    chem_func_command: str = ''
+    chemfunc_command: str = ''
 
     def configure(self):
-        self.add_subparsers(help='chem_func functions', dest='chem_func_command')
+        self.add_subparsers(help='chemfunc functions', dest='chemfunc_command')
 
         for function in FUNCTIONS:
             tap_class = convert_to_tap(function)
@@ -41,12 +41,12 @@ class ChemUtilsTap(Tap):
 
 
 def main():
-    """Entry point to the chem_func package."""
+    """Entry point to the chemfunc package."""
     args = ChemUtilsTap().parse_args()
 
-    function = NAME_TO_FUNCTION[args.chem_func_command]
+    function = NAME_TO_FUNCTION[args.chemfunc_command]
 
     args_dict = args.as_dict()
-    del args_dict['chem_func_command']
+    del args_dict['chemfunc_command']
 
     function(**args_dict)

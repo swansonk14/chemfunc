@@ -8,7 +8,7 @@ from rdkit import Chem
 from rdkit.Chem import Draw
 from tqdm import trange, tqdm
 
-from chem_func.constants import SMILES_COLUMN
+from chemfunc.constants import SMILES_COLUMN
 
 
 def visualize_molecules(

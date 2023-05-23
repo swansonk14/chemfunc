@@ -9,8 +9,8 @@ import pandas as pd
 from sklearn.manifold import TSNE
 from tqdm import tqdm
 
-from chem_func.constants import SMILES_COLUMN
-from chem_func.molecular_fingerprints import compute_fingerprints
+from chemfunc.constants import SMILES_COLUMN
+from chemfunc.molecular_fingerprints import compute_fingerprints
 
 
 def plot_tsne(
