@@ -10,7 +10,7 @@ from tqdm import tqdm
 def plot_property_distribution(
         data_paths: list[Path],
         property_column: str,
-        save_dir: Path,
+        save_path: Path,
         min_value: float = -float('inf'),
         max_value: float = float('inf')
 ) -> None:
@@ -18,7 +18,7 @@ def plot_property_distribution(
 
     :param data_paths: Path to CSV files containing SMILES.
     :param property_column: Name of the column containing the property values.
-    :param save_dir: Path to a directory where the plot and data will be saved.
+    :param save_path: Path to a PDF file where the plot and data will be saved.
     :param min_value: Minimum property value to plot (removes outliers).
     :param max_value: Maximum property value to plot (removes outliers).
     """
@@ -44,19 +44,5 @@ def plot_property_distribution(
     plt.legend()
 
     # Save plot
-    save_dir.mkdir(parents=True, exist_ok=True)
-    plt.savefig(save_dir / f'{property_column}.pdf', bbox_inches='tight')
-
-    # Save data
-    max_len = max(len(values) for values in prop_data.values())
-    fig_data = pd.DataFrame({
-        key: np.pad(values, (0, max_len - len(values)), constant_values=np.nan)
-        for key, values in prop_data.items()
-    })
-    fig_data.to_csv(save_dir / f'{property_column}.csv', index=False)
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(plot_property_distribution)
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(save_path, bbox_inches='tight')

@@ -28,6 +28,11 @@ setup(
     license='MIT',
     packages=find_packages(),
     package_data={'chem_utils': ['py.typed']},
+    entry_points={
+        'console_scripts': [
+            'chem_utils=chem_utils.main:main',
+        ]
+    },
     install_requires=[
         'descriptastorus',
         'matplotlib',

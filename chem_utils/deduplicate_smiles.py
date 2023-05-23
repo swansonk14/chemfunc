@@ -30,9 +30,3 @@ def deduplicate_smiles(
     # Save data
     save_path.parent.mkdir(parents=True, exist_ok=True)
     data.to_csv(save_path, index=False)
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(deduplicate_smiles)

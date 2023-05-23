@@ -48,7 +48,6 @@ def get_available_fingerprint_generators() -> list[str]:
     return sorted(FINGERPRINT_GENERATOR_REGISTRY)
 
 
-# TODO: load all of this from chem_utils instead
 @register_fingerprint_generator('morgan')
 def compute_morgan_fingerprint(
         mol: Molecule,

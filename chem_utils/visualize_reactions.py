@@ -12,7 +12,9 @@ def visualize_reactions(
         save_dir: Path,
         save_format: Literal['png', 'svg'] = 'svg',
         smarts_column: str = 'smarts',
-        name_column: str | None = None
+        name_column: str | None = None,
+        width: int = 800,
+        height: int = 300
 ) -> None:
     """Converts reaction SMARTS to images
 
@@ -21,6 +23,8 @@ def visualize_reactions(
     :param save_format: Image format to use when saving images.
     :param smarts_column: Name of the column containing reaction SMARTS.
     :param name_column: Name of the column containing the reaction name to use when naming the image file.
+    :param width: Width of the image.
+    :param height: Height of the image.
     """
     # Load data
     data = pd.read_csv(data_path)
@@ -41,9 +45,11 @@ def visualize_reactions(
 
     for i, (reaction, name) in enumerate(tqdm(zip(reactions, names), total=len(data), desc='Saving images')):
         if save_format == 'svg':
-            d2d = Draw.MolDraw2DSVG(800, 300)
+            d2d = Draw.MolDraw2DSVG(width, height)
+        elif save_dir == 'png':
+            d2d = Draw.MolDraw2DCairo(width, height)
         else:
-            d2d = Draw.MolDraw2DCairo(800, 300)
+            raise ValueError(f'Invalid save format: {save_format}')
 
         d2d.DrawReaction(reaction, highlightByReactant=True)
 
@@ -52,9 +58,3 @@ def visualize_reactions(
 
         with open(save_dir / f'{name}.{save_format}', 'wb+' if save_format == 'png' else 'w') as f:
             f.write(d2d.GetDrawingText())
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(visualize_reactions)

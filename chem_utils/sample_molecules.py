@@ -38,9 +38,3 @@ def sample_molecules(
     print('Saving data')
     save_path.parent.mkdir(parents=True, exist_ok=True)
     sampled.to_csv(save_path, index=False)
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(sample_molecules)

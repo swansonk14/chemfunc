@@ -46,9 +46,3 @@ def chemical_diversity(
 
     print(f'Average minimum {similarity_type.title()} distance from each molecule to the rest = '
           f'{average_min_distance:.3f} +/- {std_min_distance:.3f}')
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(chemical_diversity)

@@ -43,9 +43,3 @@ def compute_properties(data_path: Path,
 
     # Save data
     data.to_csv(save_path, index=False)
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(compute_properties)

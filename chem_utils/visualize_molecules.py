@@ -71,9 +71,3 @@ def visualize_molecules(
             img.save(save_path)
         else:
             raise ValueError(f'Image format "{image_format}" is not supported.')
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(visualize_molecules)

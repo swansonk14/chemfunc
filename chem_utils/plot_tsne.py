@@ -1,4 +1,4 @@
-"""Runs dimensionality reduction (t-SNE) on molecular fingerprints from one or more chemical libraries."""
+"""Runs a t-SNE on molecular fingerprints from one or more chemical libraries."""
 import time
 from pathlib import Path
 from typing import Literal
@@ -13,9 +13,9 @@ from chem_utils.constants import SMILES_COLUMN
 from chem_utils.molecular_fingerprints import compute_fingerprints
 
 
-def dimensionality_reduction(
+def plot_tsne(
         data_paths: list[Path],
-        save_dir: Path,
+        save_path: Path,
         method: Literal['t-SNE'] = 't-SNE',
         metric: Literal['jaccard', 'euclidean'] = 'jaccard',
         embedder: Literal['morgan', 'file'] = 'morgan',
@@ -26,10 +26,10 @@ def dimensionality_reduction(
         highlight_data_names: set[str] | None = None,
         display_data_names: set[str] | None = None
 ) -> None:
-    """Runs dimensionality reduction (t-SNE) on molecular fingerprints from one or more chemical libraries.
+    """Runs a t-SNE on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.
-    :param save_dir: Path to a directory where the dimensionality reduction plot will be saved.
+    :param save_path: Path to a PDF file where the dimensionality reduction plot will be saved.
     :param method: Dimensionality reduction method.
     :param metric: Metric to use to compared embeddings.
     :param embedder: Embedding to use for the molecules.
@@ -157,19 +157,5 @@ def dimensionality_reduction(
     plt.tight_layout()
 
     print('Saving plot')
-    save_dir.mkdir(parents=True, exist_ok=True)
-    plt.savefig(save_dir / f'{method}_{metric}.pdf', bbox_inches='tight')
-
-    print('Saving data')
-    max_len = max(len(values) for values in tsne_data.values())
-    fig_data = pd.DataFrame({
-        key: np.pad(values, (0, max_len - len(values)), constant_values=np.nan)
-        for key, values in tsne_data.items()
-    })
-    fig_data.to_csv(save_dir / f'{method}_{metric}.csv', index=False)
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(dimensionality_reduction)
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(save_path, bbox_inches='tight')

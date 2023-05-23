@@ -86,9 +86,3 @@ def filter_molecules(
     save_path.parent.mkdir(parents=True, exist_ok=True)
     data.to_csv(save_path, index=False)
     print(f'Final data size = {len(data):,}')
-
-
-if __name__ == '__main__':
-    from tap import tapify
-
-    tapify(filter_molecules)
