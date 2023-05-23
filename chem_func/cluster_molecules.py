@@ -4,8 +4,8 @@ from pathlib import Path
 import pandas as pd
 from sklearn.cluster import KMeans, MiniBatchKMeans
 
-from chem_utils.constants import CLUSTER_COLUMN, SMILES_COLUMN
-from chem_utils.molecular_similarities import compute_fingerprints
+from chem_func.constants import CLUSTER_COLUMN, SMILES_COLUMN
+from chem_func.molecular_similarities import compute_fingerprints
 
 
 def cluster_molecules(

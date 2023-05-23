@@ -9,8 +9,8 @@ from rdkit.Chem.rdFMCS import FindMCS
 from sklearn.metrics import pairwise_distances
 from tqdm import tqdm
 
-from chem_utils.constants import Molecule
-from chem_utils.molecular_fingerprints import compute_fingerprints
+from chem_func.constants import Molecule
+from chem_func.molecular_fingerprints import compute_fingerprints
 
 SimilarityFunction = Callable[[Iterable[Molecule], Iterable[Molecule] | None], np.ndarray]
 SIMILARITY_FUNCTION_REGISTRY = {}

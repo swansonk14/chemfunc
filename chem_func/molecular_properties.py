@@ -14,7 +14,7 @@ sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
 
 import sascorer
 
-from chem_utils.constants import Molecule
+from chem_func.constants import Molecule
 
 
 PropertyFunction = Callable[[Molecule], float]

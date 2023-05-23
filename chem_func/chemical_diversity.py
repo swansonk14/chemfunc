@@ -5,8 +5,8 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 
-from chem_utils.constants import SMILES_COLUMN
-from chem_utils.molecular_similarities import get_similarity_function
+from chem_func.constants import SMILES_COLUMN
+from chem_func.molecular_similarities import get_similarity_function
 
 
 def chemical_diversity(

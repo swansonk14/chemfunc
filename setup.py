@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 # Load version number
 __version__ = ''
-version_file = Path(__file__).parent.absolute() / 'chem_utils' / '_version.py'
+version_file = Path(__file__).parent.absolute() / 'chem_func' / '_version.py'
 
 with open(version_file) as fd:
     exec(fd.read())
@@ -13,24 +13,25 @@ with open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='chem_utils',
+    name='chem_func',
+    version=__version__,
     author='Kyle Swanson',
     author_email='swansonk.14@gmail.com',
-    description='Chem Utils',
+    description='Chem Func',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/swansonk14/chem_utils',
-    download_url=f'https://github.com/swansonk14/chem_utils/v_{__version__}.tar.gz',
+    url='https://github.com/swansonk14/chem_func',
+    download_url=f'https://github.com/swansonk14/chem_func/v_{__version__}.tar.gz',
     project_urls={
-        'Source': 'https://github.com/swansonk14/chem_utils',
-        'PyPi': 'https://pypi.org/project/chem_utils/'
+        'Source': 'https://github.com/swansonk14/chem_func',
+        'PyPi': 'https://pypi.org/project/chem_func/'
     },
     license='MIT',
     packages=find_packages(),
-    package_data={'chem_utils': ['py.typed']},
+    package_data={'chem_func': ['py.typed']},
     entry_points={
         'console_scripts': [
-            'chem_utils=chem_utils.main:main',
+            'chem_func=chem_func.main:main',
         ]
     },
     install_requires=[

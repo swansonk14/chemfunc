@@ -5,7 +5,7 @@ import pandas as pd
 from rdkit import Chem
 from tqdm import tqdm
 
-from chem_utils.constants import SMILES_COLUMN
+from chem_func.constants import SMILES_COLUMN
 
 
 def sdf_to_smiles(

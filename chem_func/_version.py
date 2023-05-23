@@ -1,4 +1,4 @@
-"""Contains the version information for chem_utils."""
+"""Contains the version information for chem_func."""
 # major, minor, patch
 version_info = 1, 0, 0
 

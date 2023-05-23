@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from chem_utils.constants import CLUSTER_COLUMN
+from chem_func.constants import CLUSTER_COLUMN
 
 
 def select_from_clusters(

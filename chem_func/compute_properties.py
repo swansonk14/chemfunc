@@ -5,8 +5,8 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
-from chem_utils.constants import SMILES_COLUMN
-from chem_utils.molecular_properties import get_property_function
+from chem_func.constants import SMILES_COLUMN
+from chem_func.molecular_properties import get_property_function
 
 
 def compute_properties(data_path: Path,

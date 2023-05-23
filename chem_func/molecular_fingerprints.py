@@ -9,7 +9,7 @@ from rdkit.DataStructs import ConvertToNumpyArray
 from rdkit.Chem import AllChem
 from tqdm import tqdm
 
-from chem_utils.constants import Molecule
+from chem_func.constants import Molecule
 
 
 FingerprintGenerator = Callable[[Molecule], np.ndarray]
