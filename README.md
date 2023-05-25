@@ -16,6 +16,13 @@ cd chemfunc
 pip install -e .
 ```
 
+If there are version issues with the required packages, you can create a conda environment with specific working versions of the packages as follows.
+```bash
+conda env create -y -n chemfunc python=3.10
+pip install -r requirements.txt
+pip install -e .
+```
+
 
 ## Features
 
