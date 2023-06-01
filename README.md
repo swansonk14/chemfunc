@@ -4,6 +4,12 @@ Useful functions and scripts for working with small molecules.
 
 ## Installation
 
+Optionally, create a conda environment.
+```bash
+conda create -y -n chemfunc python=3.10
+conda activate chemfunc
+```
+
 Install the latest version of Chem Func using pip.
 ```
 pip install chemfunc
@@ -16,10 +22,8 @@ cd chemfunc
 pip install -e .
 ```
 
-If there are version issues with the required packages, you can create a conda environment with specific working versions of the packages as follows.
+If there are version issues with the required packages, create a conda environment with specific working versions of the packages as follows.
 ```bash
-conda env create -y -n chemfunc python=3.10
-conda activate chemfunc
 pip install -r requirements.txt
 pip install -e .
 ```
