@@ -1,18 +1,11 @@
 """Contains functions to compute molecular properties."""
-import os
-import sys
 from functools import wraps
 from typing import Callable
 
 from rdkit import Chem
-from rdkit.Chem import RDConfig
 from rdkit.Chem.Crippen import MolLogP
 from rdkit.Chem.Descriptors import MolWt
 from rdkit.Chem.QED import qed
-
-sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
-
-import sascorer
 
 from chemfunc.constants import Molecule
 
@@ -96,12 +89,24 @@ def compute_qed(molecule: Molecule) -> float:
     return qed(molecule)
 
 
-@register_property_function('sa_score')
-@smiles_to_mol_wrapper
-def compute_sa_score(molecule: Molecule) -> float:
-    """Computes the synthetic accessibility (SA) score of a molecule.
+try:
+    import os
+    import sys
 
-    :param molecule: A molecule, either a SMILES string or an RDKit molecule.
-    :return: The SA score of the molecule.
-    """
-    return sascorer.calculateScore(molecule)
+    from rdkit.Chem import RDConfig
+
+    sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
+
+    import sascorer
+
+    @register_property_function('sa_score')
+    @smiles_to_mol_wrapper
+    def compute_sa_score(molecule: Molecule) -> float:
+        """Computes the synthetic accessibility (SA) score of a molecule.
+
+        :param molecule: A molecule, either a SMILES string or an RDKit molecule.
+        :return: The SA score of the molecule.
+        """
+        return sascorer.calculateScore(molecule)
+except ModuleNotFoundError:
+    pass
