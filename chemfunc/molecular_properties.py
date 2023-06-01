@@ -109,4 +109,13 @@ try:
         """
         return sascorer.calculateScore(molecule)
 except ModuleNotFoundError:
-    pass
+    @register_property_function('sa_score')
+    @smiles_to_mol_wrapper
+    def compute_sa_score(molecule: Molecule) -> float:
+        """Computes the synthetic accessibility (SA) score of a molecule.
+
+        :param molecule: A molecule, either a SMILES string or an RDKit molecule.
+        :return: The SA score of the molecule.
+        """
+        raise ModuleNotFoundError('The SA Score module is not installed properly with RDKit. '
+                                  'Please install it to use this property.')
