@@ -11,6 +11,8 @@ from tqdm import tqdm
 
 from chemfunc.constants import Molecule
 
+# Fix for NumPy >= 1.24.0
+np.float = float
 
 FingerprintGenerator = Callable[[Molecule], np.ndarray]
 FINGERPRINT_GENERATOR_REGISTRY = {}
