@@ -1,18 +1,28 @@
 """Functions to compute fingerprints for molecules."""
 from multiprocessing import Pool
-from typing import Callable
+from pathlib import Path
+from typing import Callable, Literal
 
 import numpy as np
-from descriptastorus.descriptors import rdNormalizedDescriptors
+import pandas as pd
+import scipy
 from rdkit import Chem
 from rdkit.DataStructs import ConvertToNumpyArray
 from rdkit.Chem import AllChem
 from tqdm import tqdm
 
-from chemfunc.constants import Molecule
+from chemfunc.constants import Molecule, SMILES_COLUMN
 
-# Fix for NumPy >= 1.24.0
+# Fixes for descriptastorus
+# for NumPy >= 1.24.0
 np.float = float
+
+# for SciPy >= 1.11.0
+if not hasattr(scipy.stats, 'gilbrat'):
+    scipy.stats.gilbrat = scipy.stats.gibrat
+
+from descriptastorus.descriptors import rdNormalizedDescriptors
+
 
 FingerprintGenerator = Callable[[Molecule], np.ndarray]
 FINGERPRINT_GENERATOR_REGISTRY = {}
@@ -115,3 +125,30 @@ def compute_fingerprints(mols: list[Molecule], fingerprint_type: str) -> np.ndar
                                           total=len(mols), desc=f'{fingerprint_type} fingerprints')))
 
     return fingerprints
+
+
+def save_fingerprints(
+        data_path: Path,
+        save_path: Path,
+        fingerprint_type: Literal['morgan', 'rdkit'] = 'rdkit',
+        smiles_column: str = SMILES_COLUMN
+) -> None:
+    """Saves fingerprints for molecules in a dataset.
+
+    :param data_path: Path to a CSV file containing molecules.
+    :param save_path: Path to a NPZ file where the fingerprints are saved (under the name "features").
+    :param fingerprint_type: The type of fingerprint to compute.
+    :param smiles_column: Name of column containing SMILES strings.
+    """
+    # Load data
+    data = pd.read_csv(data_path)
+
+    # Get SMILES
+    smiles = data[smiles_column].tolist()
+
+    # Compute fingerprints
+    fingerprints = compute_fingerprints(mols=smiles, fingerprint_type=fingerprint_type)
+
+    # Save fingerprints
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(save_path, features=fingerprints)

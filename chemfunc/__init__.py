@@ -15,7 +15,8 @@ from chemfunc.molecular_fingerprints import (
     compute_morgan_fingerprint,
     compute_rdkit_fingerprint,
     compute_fingerprint,
-    compute_fingerprints
+    compute_fingerprints,
+    save_fingerprints
 )
 from chemfunc.molecular_properties import (
     register_property_function,

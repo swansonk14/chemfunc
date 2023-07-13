@@ -88,9 +88,9 @@ Filters molecules to those with values in a certain range.
 
 Measures the experimental reproducibility of two biological replicates by using one replicate to predict the other.
 
-[`molecular_fingerprints.py`](https://github.com/swansonk14/chemfunc/blob/main/chemfunc/molecular_fingerprints.py) (functions)
+[`molecular_fingerprints.py`](https://github.com/swansonk14/chemfunc/blob/main/chemfunc/molecular_fingerprints.py) (functions, script)
 
-Contains functions to compute fingerprints for molecules. Parallelized for speed.
+Contains functions to compute fingerprints for molecules. Parallelized for speed. The function `save_fingerprints` can be used as a script to compute fingerprints from a CSV file and save them as an NPZ file.
 
 [`molecular_properties.py`](https://github.com/swansonk14/chemfunc/blob/main/chemfunc/molecular_properties.py) (functions)
 

@@ -17,6 +17,7 @@ FUNCTIONS = [
     plot_tsne,
     regression_to_classification,
     sample_molecules,
+    save_fingerprints,
     sdf_to_smiles,
     select_from_clusters,
     smiles_to_svg,
