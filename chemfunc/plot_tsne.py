@@ -16,7 +16,6 @@ from chemfunc.molecular_fingerprints import compute_fingerprints
 def plot_tsne(
         data_paths: list[Path],
         save_path: Path,
-        method: Literal['t-SNE'] = 't-SNE',
         metric: Literal['jaccard', 'euclidean'] = 'jaccard',
         embedder: Literal['morgan', 'file'] = 'morgan',
         max_molecules: list[int] | None = None,
@@ -24,13 +23,13 @@ def plot_tsne(
         smiles_columns: list[str] | None = None,
         data_names: list[str] | None = None,
         highlight_data_names: set[str] | None = None,
-        display_data_names: set[str] | None = None
+        display_data_names: set[str] | None = None,
+        point_size: int = 1000
 ) -> None:
     """Runs a t-SNE on molecular fingerprints from one or more chemical libraries.
 
     :param data_paths: Path to CSV files containing SMILES.
-    :param save_path: Path to a PDF file where the dimensionality reduction plot will be saved.
-    :param method: Dimensionality reduction method.
+    :param save_path: Path to a PDF file where the t-SNE plot will be saved.
     :param metric: Metric to use to compared embeddings.
     :param embedder: Embedding to use for the molecules.
                      morgan: Computes Morgan fingerprint from the SMILES.
@@ -43,6 +42,7 @@ def plot_tsne(
     :param data_names: Names of the data files for labeling the plot.
     :param highlight_data_names: Names of the data files to highlight in the plot.
     :param display_data_names: The names of the data files to display in the plot. If None, all are displayed.
+    :param point_size: The size of the points in the plot.
     """
     # Validate max_molecules
     if max_molecules is None:
@@ -87,8 +87,9 @@ def plot_tsne(
 
     # Load data and subsample SMILES
     smiles, slices, embeddings = [], [], []
-    for data_path, smiles_column, data_name, max_mols in tqdm(zip(data_paths, smiles_columns, data_names, max_molecules),
-                                                              total=len(data_paths), desc='Loading data'):
+    for data_path, smiles_column, data_name, max_mols in tqdm(
+            zip(data_paths, smiles_columns, data_names, max_molecules),
+            total=len(data_paths), desc='Loading data'):
         # Load data
         data = pd.read_csv(data_path)
         print(f'{data_name}: {len(data):,}')
@@ -118,15 +119,12 @@ def plot_tsne(
     else:
         raise ValueError(f'Embedder "{embedder}" is not supported.')
 
-    # Run dimensionality reduction
-    if method == 't-SNE':
-        reducer = TSNE(random_state=0, metric=metric, init='pca', n_jobs=-1, square_distances=True)
-    else:
-        raise ValueError(f'Dimensionality reduction method "{method}" is not supported.')
+    # Run t-SNE
+    tsne = TSNE(random_state=0, metric=metric, init='pca', n_jobs=-1)
 
-    print(f'Running {method}')
+    print(f'Running t-SNE')
     start = time.time()
-    X = reducer.fit_transform(embeddings)
+    X = tsne.fit_transform(embeddings)
     print(f'time = {time.time() - start:.2f} seconds')
 
     print('Plotting')
@@ -135,7 +133,7 @@ def plot_tsne(
 
     plt.clf()
     plt.figure(figsize=(64, 48))
-    plt.title(f'{method} using Morgan fingerprint with {metric.title()} similarity', fontsize=100)
+    plt.title(f't-SNE using Morgan fingerprint with {metric.title()} similarity', fontsize=100)
 
     tsne_data = {}
     for index, (slc, data_name) in enumerate(zip(slices, data_names)):
@@ -143,7 +141,7 @@ def plot_tsne(
             plt.scatter(
                 X[slc, 0],
                 X[slc, 1],
-                s=1500 if data_name in highlight_data_names else 1000,
+                s=1.5 * point_size if data_name in highlight_data_names else point_size,
                 color=colors[index],
                 label=data_name,
                 marker='*' if data_name in highlight_data_names else '.'
