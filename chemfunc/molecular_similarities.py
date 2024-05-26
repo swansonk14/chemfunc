@@ -1,4 +1,5 @@
 """Functions to compute the similarities between molecules."""
+from functools import partial
 from itertools import product
 from multiprocessing import Pool
 from typing import Callable, Iterable
@@ -22,6 +23,7 @@ def register_similarity_function(similarity_type: str) -> Callable[[SimilarityFu
     :param similarity_type: The name to use to access the similarity function.
     :return: A decorator which will add a similarity function to the registry using the specified name.
     """
+
     def decorator(similarity_function: SimilarityFunction) -> SimilarityFunction:
         SIMILARITY_FUNCTION_REGISTRY[similarity_type] = similarity_function
         return similarity_function
@@ -76,20 +78,32 @@ def compute_pairwise_tanimoto_similarities(
     return tanimoto_similarities
 
 
-def compute_mcs_size(mols: Iterable[Chem.Mol]) -> int:
+def compute_mcs_size(
+        mols: Iterable[Chem.Mol],
+        match_valences: bool = False,
+        ring_matches_ring_only: bool = False,
+        complete_rings_only: bool = False,
+) -> int:
     """
     Computes the size (number of atoms) of the maximum common substructure between molecules.
 
     :param mols: An iterable of molecules.
+    :param match_valences: Whether to match valences when computing the MCS.
+    :param ring_matches_ring_only: Whether to only match rings to rings when computing the MCS.
+    :param complete_rings_only: Whether to only match complete rings when computing the MCS.
     :return: The size (number of atoms) of the maximum common substructure between molecules.
     """
-    return FindMCS(mols).numAtoms
+    return FindMCS(mols, matchValences=match_valences, ringMatchesRingOnly=ring_matches_ring_only,
+                   completeRingsOnly=complete_rings_only).numAtoms
 
 
 @register_similarity_function('mcs')
 def compute_pairwise_mcs_similarities(
         mols_1: list[Molecule],
-        mols_2: list[Molecule] | None = None
+        mols_2: list[Molecule] | None = None,
+        match_valences: bool = False,
+        ring_matches_ring_only: bool = False,
+        complete_rings_only: bool = False,
 ) -> np.ndarray:
     """
     Computes pairwise maximum common substructure (MCS) similarities between the molecules in mols_1 and mols_2.
@@ -97,6 +111,9 @@ def compute_pairwise_mcs_similarities(
     :param mols_1: A list of molecules, either SMILES strings or RDKit molecules.
     :param mols_2: A list of molecules, either SMILES strings or RDKit molecules.
                    If None, copies mols_1 list.
+    :param match_valences: Whether to match valences when computing the MCS.
+    :param ring_matches_ring_only: Whether to only match rings to rings when computing the MCS.
+    :param complete_rings_only: Whether to only match complete rings when computing the MCS.
     :return: A 2D numpy array of pairwise similarities.
     """
     # Convert SMILES to RDKit molecules if needed
@@ -113,10 +130,18 @@ def compute_pairwise_mcs_similarities(
     else:
         mols_2 = mols_1
 
+    # Set up MCS function
+    compute_mcs_size_fn = partial(
+        compute_mcs_size,
+        match_valences=match_valences,
+        ring_matches_ring_only=ring_matches_ring_only,
+        complete_rings_only=complete_rings_only
+    )
+
     # Compute pairwise MCS similarities
     with Pool() as pool:
         pairwise_mcs = np.array(
-            list(tqdm(pool.imap(compute_mcs_size, product(mols_1, mols_2)),
+            list(tqdm(pool.imap(compute_mcs_size_fn, product(mols_1, mols_2)),
                       total=len(mols_1) * len(mols_2)))
         )
 
@@ -146,7 +171,8 @@ def compute_pairwise_tversky_similarities(
     """
     # Compute Morgan fingerprints
     fps_1 = np.array(compute_fingerprints(mols_1, fingerprint_type='morgan'), dtype=int)
-    fps_2 = np.array(compute_fingerprints(mols_2, fingerprint_type='morgan'), dtype=int) if mols_2 is not None else fps_1
+    fps_2 = np.array(compute_fingerprints(mols_2, fingerprint_type='morgan'),
+                     dtype=int) if mols_2 is not None else fps_1
 
     # Compute pairwise Tversky similarities
     intersection = fps_1 @ fps_2.transpose()

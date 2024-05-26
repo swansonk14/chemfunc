@@ -16,7 +16,10 @@ def nearest_neighbor(
         save_path: Path | None = None,
         smiles_column: str = SMILES_COLUMN,
         reference_smiles_column: str | None = None,
-        reference_name: str | None = None
+        reference_name: str | None = None,
+        match_valences: bool = False,
+        ring_matches_ring_only: bool = False,
+        complete_rings_only: bool = False,
 ) -> None:
     """Given a dataset, computes the nearest neighbor molecule by Tanimoto similarity in a second dataset.
 
@@ -32,6 +35,9 @@ def nearest_neighbor(
     :param reference_smiles_column: Name of the column in reference_data_path containing SMILES.
                                     If None, then smiles_column is used.
     :param reference_name: Name of the reference data when naming the new columns with neighbor info.
+    :param match_valences: For MCS only, whether to match valences when computing the MCS.
+    :param ring_matches_ring_only: For MCS only, whether to only match rings to rings when computing the MCS.
+    :param complete_rings_only: For MCS only, whether to only match complete rings when computing the MCS.
     """
     # Set save path
     if save_path is None:
@@ -49,10 +55,21 @@ def nearest_neighbor(
     reference_data.drop_duplicates(subset=reference_smiles_column, inplace=True)
     reference_data.sort_values(by=reference_smiles_column, ignore_index=True, inplace=True)
 
+    # Set up similarity function kwargs
+    if metric == 'mcs':
+        kwargs = {
+            'match_valences': match_valences,
+            'ring_matches_ring_only': ring_matches_ring_only,
+            'complete_rings_only': complete_rings_only,
+        }
+    else:
+        kwargs = {}
+
     print(f'Computing similarities using {metric} metric')
     similarities = get_similarity_function(metric)(
         data[smiles_column],
-        reference_data[reference_smiles_column]
+        reference_data[reference_smiles_column],
+        **kwargs
     )
 
     print('Finding minimum distance SMILES')
