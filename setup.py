@@ -41,7 +41,7 @@ setup(
         'pandas',
         'rdkit',
         'scikit-learn',
-        'tqdm',
+        'tqdm>=4.66.3',
         'typed-argument-parser>=1.9.0'
     ],
     python_requires='>=3.10',
