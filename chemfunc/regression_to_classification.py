@@ -27,7 +27,7 @@ def regression_to_classification(
         Use case: Create a binary classification dataset with a gap between classes by specifying two thresholds
         and deleting the class in between.
         Ex: thresholds = [0.4, 0.6], delete_class_indices = {1} will label data < 0.4 as 0 and data >= 0.6 as 1
-        and will delete data in between 0.4 and 0.6.
+        (originally labeled 2) and will delete data in between 0.4 and 0.6 (originally labeled 1).
     """
     # Load regression data
     data = pd.read_csv(data_path)
