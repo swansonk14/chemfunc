@@ -1,5 +1,10 @@
 # Chem Func
 
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/chemfunc)](https://badge.fury.io/py/chemfunc)
+[![PyPI version](https://badge.fury.io/py/chemfunc.svg)](https://badge.fury.io/py/chemfunc)
+[![Downloads](https://pepy.tech/badge/chemfunc)](https://pepy.tech/project/chemfunc)
+[![license](https://img.shields.io/github/license/swansonk14/chemfunc.svg)](https://github.com/swansonk14/chemfunc/blob/main/LICENSE.txt)
+
 Useful functions and scripts for working with small molecules.
 
 ## Installation
