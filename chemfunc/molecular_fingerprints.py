@@ -71,13 +71,13 @@ def compute_morgan_fingerprint(
     :param mol: A molecule (i.e., either a SMILES string or an RDKit molecule).
     :param radius: Morgan fingerprint radius.
     :param num_bits: Number of bits in Morgan fingerprint.
-    :return: A 1D boolean numpy array (num_bits,) containing the binary Morgan fingerprint.
+    :return: A 1D numpy array (num_bits,) containing the Morgan fingerprint.
     """
     mol = Chem.MolFromSmiles(mol) if type(mol) == str else mol
     morgan_vec = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=num_bits)
     morgan_fp = np.zeros((1,))
     ConvertToNumpyArray(morgan_vec, morgan_fp)
-    morgan_fp = morgan_fp.astype(bool)
+    morgan_fp = morgan_fp.astype(np.float32)
 
     return morgan_fp
 
