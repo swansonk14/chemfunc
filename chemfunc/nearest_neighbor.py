@@ -20,6 +20,7 @@ def nearest_neighbor(
         match_valences: bool = False,
         ring_matches_ring_only: bool = False,
         complete_rings_only: bool = False,
+        denominator: Literal['mol_1', 'mol_2', 'avg'] = 'mol_2',
 ) -> None:
     """Given a dataset, computes the nearest neighbor molecule by Tanimoto similarity in a second dataset.
 
@@ -38,6 +39,10 @@ def nearest_neighbor(
     :param match_valences: For MCS only, whether to match valences when computing the MCS.
     :param ring_matches_ring_only: For MCS only, whether to only match rings to rings when computing the MCS.
     :param complete_rings_only: For MCS only, whether to only match complete rings when computing the MCS.
+    :param denominator: For MCS only, the denominator (molecule size) to use when computing the similarity.
+                    mol_1: similarity = MCS_size / num_atoms_mol_1
+                    mol_2: similarity = MCS_size / num_atoms_mol_2
+                    avg: similarity = 0.5 * (MCS_size / num_atoms_mol_1 + MCS_size / num_atoms_mol_2)
     """
     # Set save path
     if save_path is None:
@@ -61,6 +66,7 @@ def nearest_neighbor(
             'match_valences': match_valences,
             'ring_matches_ring_only': ring_matches_ring_only,
             'complete_rings_only': complete_rings_only,
+            'denominator': denominator,
         }
     else:
         kwargs = {}

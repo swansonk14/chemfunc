@@ -2,7 +2,7 @@
 from functools import partial
 from itertools import product
 from multiprocessing import Pool
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Literal
 
 import numpy as np
 from rdkit import Chem
@@ -104,6 +104,7 @@ def compute_pairwise_mcs_similarities(
         match_valences: bool = False,
         ring_matches_ring_only: bool = False,
         complete_rings_only: bool = False,
+        denominator: Literal['mol_1', 'mol_2', 'avg'] = 'mol_2',
 ) -> np.ndarray:
     """
     Computes pairwise maximum common substructure (MCS) similarities between the molecules in mols_1 and mols_2.
@@ -114,6 +115,10 @@ def compute_pairwise_mcs_similarities(
     :param match_valences: Whether to match valences when computing the MCS.
     :param ring_matches_ring_only: Whether to only match rings to rings when computing the MCS.
     :param complete_rings_only: Whether to only match complete rings when computing the MCS.
+    :param denominator: The denominator (molecule size) to use when computing the similarity.
+                        mol_1: similarity = MCS_size / num_atoms_mol_1
+                        mol_2: similarity = MCS_size / num_atoms_mol_2
+                        avg: similarity = 0.5 * (MCS_size / num_atoms_mol_1 + MCS_size / num_atoms_mol_2)
     :return: A 2D numpy array of pairwise similarities.
     """
     # Convert SMILES to RDKit molecules if needed
@@ -138,7 +143,7 @@ def compute_pairwise_mcs_similarities(
         complete_rings_only=complete_rings_only
     )
 
-    # Compute pairwise MCS similarities
+    # Compute pairwise MCS sizes
     with Pool() as pool:
         pairwise_mcs = np.array(
             list(tqdm(pool.imap(compute_mcs_size_fn, product(mols_1, mols_2)),
@@ -147,8 +152,19 @@ def compute_pairwise_mcs_similarities(
 
     pairwise_mcs = pairwise_mcs.reshape(len(mols_1), len(mols_2))
 
-    num_atoms_2 = np.array([mol.GetNumAtoms() for mol in mols_2])
-    mcs_similarities = pairwise_mcs / num_atoms_2
+    # Compute MCS similarities
+    if denominator == 'mol_1':
+        num_atoms_1 = np.array([mol.GetNumAtoms() for mol in mols_1])[:, np.newaxis]
+        mcs_similarities = pairwise_mcs / num_atoms_1
+    elif denominator == 'mol_2':
+        num_atoms_2 = np.array([mol.GetNumAtoms() for mol in mols_2])[np.newaxis, :]
+        mcs_similarities = pairwise_mcs / num_atoms_2
+    elif denominator == 'avg':
+        num_atoms_1 = np.array([mol.GetNumAtoms() for mol in mols_1])[:, np.newaxis]
+        num_atoms_2 = np.array([mol.GetNumAtoms() for mol in mols_2])[np.newaxis, :]
+        mcs_similarities = 0.5 * (pairwise_mcs / num_atoms_1 + pairwise_mcs / num_atoms_2)
+    else:
+        raise ValueError(f'Invalid denominator "{denominator}"')
 
     return mcs_similarities
 
