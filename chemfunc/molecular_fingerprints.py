@@ -5,22 +5,12 @@ from typing import Callable, Literal
 
 import numpy as np
 import pandas as pd
-import scipy
+from descriptastorus.descriptors import rdNormalizedDescriptors
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 from tqdm import tqdm
 
 from chemfunc.constants import Molecule, SMILES_COLUMN
-
-# Fixes for descriptastorus
-# for NumPy >= 1.24.0
-np.float = float
-
-# for SciPy >= 1.11.0
-if not hasattr(scipy.stats, 'gilbrat'):
-    scipy.stats.gilbrat = scipy.stats.gibrat
-
-from descriptastorus.descriptors import rdNormalizedDescriptors
 
 FingerprintGenerator = Callable[[Molecule], np.ndarray]
 FINGERPRINT_GENERATOR_REGISTRY = {}

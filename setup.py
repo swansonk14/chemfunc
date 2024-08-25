@@ -35,7 +35,7 @@ setup(
         ]
     },
     install_requires=[
-        'descriptastorus',
+        'descriptastorus>=2.6.1',
         'matplotlib',
         'numpy',
         'pandas',
