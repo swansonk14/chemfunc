@@ -7,8 +7,7 @@ import numpy as np
 import pandas as pd
 import scipy
 from rdkit import Chem
-from rdkit.DataStructs import ConvertToNumpyArray
-from rdkit.Chem import AllChem
+from rdkit.Chem import rdFingerprintGenerator
 from tqdm import tqdm
 
 from chemfunc.constants import Molecule, SMILES_COLUMN
@@ -23,11 +22,16 @@ if not hasattr(scipy.stats, 'gilbrat'):
 
 from descriptastorus.descriptors import rdNormalizedDescriptors
 
-
 FingerprintGenerator = Callable[[Molecule], np.ndarray]
 FINGERPRINT_GENERATOR_REGISTRY = {}
 MORGAN_RADIUS = 2
 MORGAN_NUM_BITS = 2048
+MORGAN_PARAMS_TO_GENERATOR = {
+    (MORGAN_RADIUS, MORGAN_NUM_BITS): rdFingerprintGenerator.GetMorganGenerator(
+        radius=MORGAN_RADIUS,
+        fpSize=MORGAN_NUM_BITS
+    )
+}
 
 
 def register_fingerprint_generator(fingerprint_type: str) -> Callable[[FingerprintGenerator], FingerprintGenerator]:
@@ -36,6 +40,7 @@ def register_fingerprint_generator(fingerprint_type: str) -> Callable[[Fingerpri
     :param fingerprint_type: The name to use to access the fingerprint generator.
     :return: A decorator which will add a fingerprint generator to the registry using the specified name.
     """
+
     def decorator(fingerprint_generator: FingerprintGenerator) -> FingerprintGenerator:
         FINGERPRINT_GENERATOR_REGISTRY[fingerprint_type] = fingerprint_generator
         return fingerprint_generator
@@ -73,11 +78,24 @@ def compute_morgan_fingerprint(
     :param num_bits: Number of bits in Morgan fingerprint.
     :return: A 1D numpy array (num_bits,) containing the Morgan fingerprint.
     """
+    # Set up Morgan parameters
+    morgan_params = (radius, num_bits)
+
+    # Convert SMILES to RDKit molecule if necessary
     mol = Chem.MolFromSmiles(mol) if type(mol) == str else mol
-    morgan_vec = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=num_bits)
-    morgan_fp = np.zeros((1,))
-    ConvertToNumpyArray(morgan_vec, morgan_fp)
-    morgan_fp = morgan_fp.astype(np.float32)
+
+    # Create Morgan fingerprint generator if necessary
+    if morgan_params not in MORGAN_PARAMS_TO_GENERATOR:
+        MORGAN_PARAMS_TO_GENERATOR[morgan_params] = rdFingerprintGenerator.GetMorganGenerator(
+            radius=radius,
+            fpSize=num_bits
+        )
+
+    # Get Morgan fingerprint generator
+    morgan_generator = MORGAN_PARAMS_TO_GENERATOR[morgan_params]
+
+    # Generate fingerprint
+    morgan_fp = morgan_generator.GetFingerprintAsNumPy(mol).astype(np.float32)
 
     return morgan_fp
 
