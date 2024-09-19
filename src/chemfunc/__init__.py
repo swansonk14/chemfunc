@@ -1,5 +1,5 @@
 """Import all submodules of chemfunc."""
-from chemfunc._version import __version__
+from chemfunc.__about__ import __version__
 
 from chemfunc.canonicalize_smiles import canonicalize_smiles
 from chemfunc.chemical_diversity import chemical_diversity

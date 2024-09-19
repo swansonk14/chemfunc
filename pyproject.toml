@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chemfunc"
+dynamic = ["version"]
+authors = [
+    { name = "Kyle Swanson", email = "swansonk.14@gmail.com" },
+]
+maintainers = [
+    { name = "Kyle Swanson", email = "swansonk.14@gmail.com" },
+]
+description = "Useful functions and scripts for working with small molecules."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "descriptastorus>=2.6.1",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "rdkit",
+    "scikit-learn",
+    "tqdm>=4.66.3",
+    "typed-argument-parser>=1.10.1",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+keywords = [
+    "computational chemistry",
+]
+
+[tool.hatch.version]
+path = "src/chemfunc/__about__.py"
+
+[project.scripts]
+chemfunc = "chemfunc.main:main"
+
+[project.urls]
+Homepage = "https://github.com/swansonk14/chemfunc"
+Issues = "https://github.com/swansonk14/chemfunc/issues"
