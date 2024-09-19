@@ -1,5 +1,5 @@
 """Entry point to the chemfunc package."""
-from tap import Tap
+from tap import Tap, to_tap_class
 
 from chemfunc import *
 
@@ -18,6 +18,7 @@ FUNCTIONS = [
     regression_to_classification,
     sample_molecules,
     save_fingerprints,
+    sdf_to_smarts,
     sdf_to_smiles,
     select_from_clusters,
     smiles_to_svg,
@@ -37,7 +38,7 @@ class ChemUtilsTap(Tap):
         self.add_subparsers(help='chemfunc functions', dest='chemfunc_command')
 
         for function in FUNCTIONS:
-            tap_class = convert_to_tap(function)
+            tap_class = to_tap_class(function)
             self.add_subparser(function.__name__, tap_class, help=tap_class.__doc__)
 
 

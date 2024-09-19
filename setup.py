@@ -42,7 +42,7 @@ setup(
         'rdkit',
         'scikit-learn',
         'tqdm>=4.66.3',
-        'typed-argument-parser>=1.9.0'
+        'typed-argument-parser>=1.10.1'
     ],
     python_requires='>=3.10',
     classifiers=[

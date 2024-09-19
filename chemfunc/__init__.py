@@ -5,6 +5,7 @@ from chemfunc.canonicalize_smiles import canonicalize_smiles
 from chemfunc.chemical_diversity import chemical_diversity
 from chemfunc.cluster_molecules import cluster_molecules
 from chemfunc.compute_properties import compute_properties
+from chemfunc.convert_sdf import convert_sdf, mol_to_properties
 from chemfunc.deduplicate_smiles import deduplicate_smiles
 from chemfunc.filter_molecules import filter_molecules
 from chemfunc.measure_experimental_reproducibility import measure_experimental_reproducibility
@@ -43,9 +44,9 @@ from chemfunc.plot_property_distribution import plot_property_distribution
 from chemfunc.plot_tsne import plot_tsne
 from chemfunc.regression_to_classification import regression_to_classification
 from chemfunc.sample_molecules import sample_molecules
+from chemfunc.sdf_to_smarts import sdf_to_smarts
 from chemfunc.sdf_to_smiles import sdf_to_smiles
 from chemfunc.select_from_clusters import select_from_clusters
 from chemfunc.smiles_to_svg import smiles_to_svg
-from chemfunc.utils import convert_to_tap
 from chemfunc.visualize_molecules import visualize_molecules
 from chemfunc.visualize_reactions import visualize_reactions
