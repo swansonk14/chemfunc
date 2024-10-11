@@ -16,7 +16,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
-    "descriptastorus>=2.6.1",
+    "descriptastorus>=2.7.0.5",
     "matplotlib",
     "numpy",
     "pandas",
