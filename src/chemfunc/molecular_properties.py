@@ -7,6 +7,7 @@ from rdkit.Chem.Crippen import MolLogP
 from rdkit.Chem.Descriptors import MolWt
 from rdkit.Chem.FilterCatalog import FilterCatalog, FilterCatalogParams
 from rdkit.Chem.QED import qed
+from rdkit.Chem.rdMolDescriptors import CalcTPSA
 
 from chemfunc.constants import Molecule
 
@@ -110,6 +111,17 @@ def compute_pains_plus(molecule: Molecule) -> str:
     )
 
     return matches
+
+
+@register_property_function('tpsa')
+@smiles_to_mol_wrapper
+def compute_tpsa(molecule: Molecule) -> float:
+    """Computes the topological polar surface area (TPSA) of a molecule.
+
+    :param molecule: A molecule, either a SMILES string or an RDKit molecule.
+    :return: The TPSA of the molecule.
+    """
+    return CalcTPSA(molecule)
 
 
 try:
