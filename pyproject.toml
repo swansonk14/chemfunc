@@ -13,7 +13,8 @@ maintainers = [
 ]
 description = "Useful functions and scripts for working with small molecules."
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = [ "LICENSE.txt" ]
 requires-python = ">=3.10"
 dependencies = [
     "descriptastorus>=2.7.0.5",
@@ -30,6 +31,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Typing :: Typed",
