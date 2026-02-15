@@ -11,7 +11,7 @@ Useful functions and scripts for working with small molecules.
 
 Optionally, create a conda environment.
 ```bash
-conda create -y -n chemfunc python=3.13
+conda create -y -n chemfunc python=3.14
 conda activate chemfunc
 ```
 
